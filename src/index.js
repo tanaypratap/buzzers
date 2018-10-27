@@ -5,10 +5,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+import ThemedApp from './ThemedApp';
 import * as serviceWorker from './serviceWorker';
 import { Provider } from 'react-redux';
-import configureStore from './store/configureStore';
+import configureStore from './redux/store/configureStore';
 
 // This method invokes the createstore method passing
 // reducer and initial state
@@ -16,7 +16,7 @@ const store = configureStore();
 
 ReactDOM.render(
 <Provider store={store}>
-    <App />
+    <ThemedApp />
 </Provider>, 
 document.getElementById('root'));
 

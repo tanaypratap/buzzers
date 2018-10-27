@@ -9,6 +9,7 @@ const challengeQuizPlayResponseIndex = 'challengequizplayresponse'
 const tournamentQuizPlayIndex = "tournamentquizplay";
 const tournamentQuizPlayResponseIndex = 'tournamentquizplayresponse'
 
+
 /**
  * Add a quiz to firebase
  * @param {string} file 
@@ -46,7 +47,6 @@ const getAllQuiz = function() {
      });
 };
 /**
- * 
  * @param {*} quizId the id of the quiz
  * @param {*} questionId question id to be retrieved.
  */
@@ -108,6 +108,7 @@ const quizChallengeResponse = function(quizPlayId, questionId, user, response, i
     var challengeQuizPlayRef = firebase.app().database().ref(challengeQuizPlayIndex);
     challengeQuizPlayRef.child(quizPlayId).child(user).child("score").set(currentScore);
 }
+
 /**
  * Adding the user to teh tournament with isAlive = true, on any one queston isAlive becomes false and user can't continue.
  * @param {*} quizId 
@@ -195,6 +196,7 @@ var challengeId = startQuizChallenge('-LPol7rwiaUYa9aYvmsD','jatin','shashank')
 console.log(challengeId);
 //4. response of a 1-1 quiz.
 quizChallengeResponse("-LPpExdwJIEJ_hweg_Gz",1,'jatin','23',false,4);
+
 
 //5 registerUser to quiz.
 addUserToTournamentQuiz('-LPol7rwiaUYa9aYvmsD','tanay');
