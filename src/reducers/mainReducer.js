@@ -11,7 +11,7 @@ export default function work(state=initialState, action){
             console.log('FS');
             return Object.assign({}, state, {
                 "hello": 1
-            })
+            });
         default:
             return state;
     }
