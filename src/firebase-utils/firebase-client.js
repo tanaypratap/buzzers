@@ -6,6 +6,8 @@ const quizIndex = "quiz";
 const quizQuestionsIndex = "quizquestions";
 const challengeQuizPlayIndex = "challengequizplay";
 const challengeQuizPlayResponseIndex = 'challengequizplayresponse'
+const tournamentQuizPlayIndex = "tournamentquizplay";
+const tournamentQuizPlayResponseIndex = 'tournamentquizplayresponse'
 
 /**
  * Add a quiz to firebase
@@ -44,7 +46,7 @@ const getAllQuiz = function() {
      });
 };
 /**
- * Get a quiz question.
+ * 
  * @param {*} quizId the id of the quiz
  * @param {*} questionId question id to be retrieved.
  */
@@ -76,7 +78,6 @@ const startQuizChallenge = function(quizId, player1, player2) {
     challengeQuizPlayObj[player2] = {"score":0}
     var quizPlayId;
     challengeQuizPlayRef.push(challengeQuizPlayObj).then((snapshot) => {
-        console.log(snapshot.key)
         quizPlayId = snapshot.key;
         return quizPlayId;
     });
@@ -106,6 +107,62 @@ const quizChallengeResponse = function(quizPlayId, questionId, user, response, i
     // update the score here for the user.
     var challengeQuizPlayRef = firebase.app().database().ref(challengeQuizPlayIndex);
     challengeQuizPlayRef.child(quizPlayId).child(user).child("score").set(currentScore);
+}
+/**
+ * Adding the user to teh tournament with isAlive = true, on any one queston isAlive becomes false and user can't continue.
+ * @param {*} quizId 
+ * @param {*} user 
+ */
+const addUserToTournamentQuiz = function(quizId, user) {
+    var refPath = `${tournamentQuizPlayIndex}/${quizId}/${user}`;
+    var tournamentQuizRef = firebase.app().database().ref().child(refPath);
+    var userObject = {"isAlive" : true}
+    tournamentQuizRef.set(userObject)
+}
+/**
+ * Adding the response of the user as Option 1 to 4 for every question. For wrong answer mark user isAlive= false.
+ * @param {*} quizId 
+ * @param {*} questionId 
+ * @param {*} userResponse 
+ */
+const userTournamentQuizResponse= function(quizId, questionId,user, userResponse) {
+    // check if user is alive
+    if(!checkIfUserAlive(quizId,user).then(val => {return val}).catch(val =>{return val})) {
+        console.log("Error recieved");
+        throw new Error("User is Malicious");
+    }
+   // get the correct answer from dba nd compare with given answer to update isAlive
+    var correctAnswerRef = `${quizQuestionsIndex}/${quizId}/${questionId}/correctAnswer`;
+    firebase.database().ref().child(correctAnswerRef).once("value", function(snapshot) {
+        
+        var correctAnswer = snapshot.val();
+      
+        if (userResponse != correctAnswer) {
+            var quizUserRef = `${tournamentQuizPlayIndex}/${quizId}/${user}/isAlive`;
+            firebase.app().database().ref(quizUserRef).set(false);
+        }
+    }, function (error) {
+        console.log("Error: " + error.code);
+    });
+    var databaseRef = firebase.database().ref(tournamentQuizPlayResponseIndex).child(quizId).child(questionId).child(userResponse);
+    databaseRef.transaction(function(response) {
+        return (response || 0) + 1
+    });
+}
+
+const checkIfUserAlive = function(quizId, user) {
+    return new Promise((resolve, reject) =>{
+        var refPath = `${tournamentQuizPlayIndex}/${quizId}/${user}/isAlive`
+        
+        firebase.database().ref(refPath).once("value", function(snapshot) {
+            if (snapshot.val() === false) {
+                console.log(user + " is Malicious User should be blocked");
+                reject(false);
+            } else {
+                resolve(true);
+            }
+        })
+    });
 }
 
 // config for firebase
@@ -138,4 +195,9 @@ var challengeId = startQuizChallenge('-LPol7rwiaUYa9aYvmsD','jatin','shashank')
 console.log(challengeId);
 //4. response of a 1-1 quiz.
 quizChallengeResponse("-LPpExdwJIEJ_hweg_Gz",1,'jatin','23',false,4);
+
+//5 registerUser to quiz.
+addUserToTournamentQuiz('-LPol7rwiaUYa9aYvmsD','tanay');
+// register answer of user to quiz.
+userTournamentQuizResponse('-LPol7rwiaUYa9aYvmsD',1,'tanay','375')
 
