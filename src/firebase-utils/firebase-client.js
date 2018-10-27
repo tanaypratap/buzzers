@@ -8,6 +8,10 @@ const challengeQuizPlayIndex = "challengequizplay";
 const challengeQuizPlayResponseIndex = 'challengequizplayresponse'
 const tournamentQuizPlayIndex = "tournamentquizplay";
 const tournamentQuizPlayResponseIndex = 'tournamentquizplayresponse'
+<<<<<<< HEAD
+=======
+
+>>>>>>> bb2dbfa927f4a883b8dbb5be52ea1cc01e81e0e4
 
 /**
  * Add a quiz to firebase
@@ -46,7 +50,10 @@ const getAllQuiz = function() {
      });
 };
 /**
+<<<<<<< HEAD
  * Get a quiz question.
+=======
+>>>>>>> bb2dbfa927f4a883b8dbb5be52ea1cc01e81e0e4
  * @param {*} quizId the id of the quiz
  * @param {*} questionId question id to be retrieved.
  */
@@ -108,6 +115,10 @@ const quizChallengeResponse = function(quizPlayId, questionId, user, response, i
     var challengeQuizPlayRef = firebase.app().database().ref(challengeQuizPlayIndex);
     challengeQuizPlayRef.child(quizPlayId).child(user).child("score").set(currentScore);
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> bb2dbfa927f4a883b8dbb5be52ea1cc01e81e0e4
 /**
  * Adding the user to teh tournament with isAlive = true, on any one queston isAlive becomes false and user can't continue.
  * @param {*} quizId 
@@ -196,6 +207,10 @@ console.log(challengeId);
 //4. response of a 1-1 quiz.
 quizChallengeResponse("-LPpExdwJIEJ_hweg_Gz",1,'jatin','23',false,4);
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> bb2dbfa927f4a883b8dbb5be52ea1cc01e81e0e4
 //5 registerUser to quiz.
 addUserToTournamentQuiz('-LPol7rwiaUYa9aYvmsD','tanay');
 // register answer of user to quiz.
