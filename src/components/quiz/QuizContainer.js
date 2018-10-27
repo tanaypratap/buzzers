@@ -4,23 +4,40 @@
  */
 import React from 'react';
 import QuizLayout from './QuizLayout';
-import { getAllQuiz } from './utils/dbUtils';
+import { getAllQuiz, getQuizInfo } from '../../firebase-utils/firebase-client';
 
 class QuizContainer extends React.Component {
     constructor(props){
         super(props);
-        this.state = {};
+        this.state = {
+            upcomingQuizes: {}
+        };
     }
 
     componentDidMount() {
-        console.log('Needs to be removed')
-        getAllQuiz();
+        getAllQuiz( (value) => {
+            const currentTime = Date.now();
+            let upcomingQuizes = {};
+            if(value){
+                Object.keys(value).map( (id) => {
+                    if(value[id].Start_time > currentTime){                            
+                       upcomingQuizes[id] = value[id]
+                    }
+                })
+                this.setState({
+                    upcomingQuizes
+                })
+            }
+        });
+        
     }
 
     render() {
+        const quizes = this.state.upcomingQuizes;
         return (
             <div>
-                <QuizLayout quizNumber={23} />
+                 {quizes && Object.keys(quizes)
+                    .map(id => <QuizLayout quizName={quizes[id].quiz_name} />)} 
             </div>
         )
     }

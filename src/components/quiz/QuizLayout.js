@@ -45,7 +45,7 @@ class QuizLayout extends React.Component {
                   />
                   <CardContent>
                     <Typography gutterBottom variant="h5" component="h2">
-                      General Knowledge
+                      {this.props.quizName}
                     </Typography>
                     <Typography component="p">
                       Test your general knowledge

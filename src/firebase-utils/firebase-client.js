@@ -35,17 +35,21 @@ var addQuestionToFirebase = function (file) {
         }
  });
 };
+
 /**
  * Get all the quiz from the quiz index.
  */
-const getAllQuiz = function() {
+export const getAllQuiz = function(callback) {
+    let allQuiz = null;
     var quizRef = firebase.app().database().ref(quizIndex);
     quizRef.on("value", function(snapshot) {
-        console.log(snapshot.val());
+        allQuiz = snapshot.val();
+        callback(allQuiz);
      }, function (error) {
         console.log("Error: " + error.code);
      });
 };
+
 /**
  * @param {*} quizId the id of the quiz
  * @param {*} questionId question id to be retrieved.
@@ -178,16 +182,16 @@ const config = {
 firebase.initializeApp(config);
 
 
-// testing code
-//1 creating quizes.
-const directoyPath = path.resolve("../test-firebase/quiz_questions");
-fs.readdir(directoyPath,function(err, files) {
-    console.log(directoyPath);
-    files.forEach(function(file) {
-        console.log(file);
-        addQuestionToFirebase(directoyPath + "/" + file);
-    });
-})
+// // testing code
+// //1 creating quizes.
+// const directoyPath = path.resolve("../test-firebase/quiz_questions");
+// fs.readdir(directoyPath,function(err, files) {
+//     console.log(directoyPath);
+//     files.forEach(function(file) {
+//         console.log(file);
+//         addQuestionToFirebase(directoyPath + "/" + file);
+//     });
+// })
 
 //2. getting a quiz question.
 getQuizQuestion('-LPol7rwiaUYa9aYvmsD',1);
