@@ -13,6 +13,7 @@ import theme from './utils/material-ui-theme'
 class App extends Component {
 
   render() {
+    
     return (
       <div className="App">
         <button onClick={this.props.sendTheAlert}>Click</button>
