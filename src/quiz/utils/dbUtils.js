@@ -18,11 +18,10 @@ const getQuizQuestion = function(quizId, questionId) {
     var quizQuestionRef = firebase.app().database().ref(quizQuestionsIndex);
     var quizRef = quizQuestionRef.child(quizId);
     var questionRef = quizRef.child(questionId);
-     
+
     questionRef.once("value", function(snapshot) {
     console.log(snapshot.val());
     }, function (error) {
     console.log("Error: " + error.code);
     });
 };
-X
