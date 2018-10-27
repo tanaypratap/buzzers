@@ -1,5 +1,5 @@
 /**
- * @description View code
+ * @description The page shows a particular quiz
  * @author Akanksha Choudhary <akanksha.ch29@gmail.com>
  */
 import React from 'react';
@@ -32,13 +32,14 @@ class QuizLayout extends React.Component {
     }
     render() {
       const { classes } = this.props;
+      console.log(this.props.classes);
         return (
-          <div className="container text-center">
-            <div className="row text-center">
+          <div className="container">
+            <div className="row">
               <Card className={classes.card}>
                 <CardActionArea>
                   <CardMedia
-                    style={styles.media}
+                    className={classes.media}
                     image="/images/gk_thumbnail.jpg"
                     title="Competitive"
                   />
@@ -52,7 +53,7 @@ class QuizLayout extends React.Component {
                   </CardContent>
                 </CardActionArea>
                 <CardActions>
-                  <Button variant="contained" color="primary" style={styles.button}>
+                  <Button variant="contained" color="primary" className={classes.button}>
                     Start Quiz
                   </Button>
                 </CardActions>
