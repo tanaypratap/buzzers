@@ -1,3 +1,7 @@
+/**
+ * @author Shashank
+ * @description  This is the App Container
+ */
 import React, { Component } from 'react';
 import './App.css';
 import Quiz from './quiz';
@@ -5,14 +9,7 @@ import {connect} from 'react-redux';
 import * as Actions from './actions/workActions';
 
 class App extends Component {
-
-  constructor(props){
-    super(props);
-    this.state = {
-      todos: null
-    };   
-  }
-
+  
   render() {
     return (
       <div className="App">
