@@ -7,6 +7,8 @@ import './App.css';
 import Quiz from './quiz';
 import {connect} from 'react-redux';
 import * as Actions from './actions/workActions';
+import { MuiThemeProvider } from '@material-ui/core/styles';
+import theme from './utils/material-ui-theme'
 
 class App extends Component {
 
@@ -14,12 +16,19 @@ class App extends Component {
     
     return (
       <div className="App">
-        <h1> Start putting your code here </h1>
         <button onClick={this.props.sendTheAlert}>Click</button>
         <Quiz></Quiz>
       </div>
     );
   }
+}
+
+function ThemedApp(){
+  return (
+    <MuiThemeProvider theme={theme}>
+      <App />
+    </MuiThemeProvider>
+  )
 }
 
 function mapStateToProps(state){
@@ -35,4 +44,4 @@ function mapDispatchToProps(dispatch){
 };
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(ThemedApp);
