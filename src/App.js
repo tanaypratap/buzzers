@@ -5,6 +5,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import Quiz from './quiz';
+import QuizQuestion from './quiz-question';
 import {connect} from 'react-redux';
 import * as Actions from './actions/workActions';
 import { MuiThemeProvider } from '@material-ui/core/styles';
@@ -13,11 +14,11 @@ import theme from './utils/material-ui-theme'
 class App extends Component {
 
   render() {
-    
+
     return (
       <div className="App">
         <button onClick={this.props.sendTheAlert}>Click</button>
-        <Quiz></Quiz>
+        <QuizQuestion></QuizQuestion>
       </div>
     );
   }
