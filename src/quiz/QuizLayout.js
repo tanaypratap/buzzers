@@ -19,9 +19,7 @@ class QuizLayout extends React.Component {
         console.log('This needs to be removed');
     }
     render() {
-        // const { classes } = props;
         return (
-          // <h1 className="quiz-number-header"> Quiz no. {this.props.quizNumber} </h1>
           <Button variant="contained" color="primary" style={styles.button}>
             Test Button
           </Button>
