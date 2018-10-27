@@ -3,7 +3,7 @@
  * @description  This is the main reducer
  */
 import initialState from './initialState';
-import { FETCH_STUFF } from '../actions/actionTypes';
+import { FETCH_STUFF } from '../../components/testapp/actions/actionTypes';
 
 export default function work(state=initialState, action){ 
     switch(action.type){

@@ -46,7 +46,7 @@ const getAllQuiz = function() {
      });
 };
 /**
- * 
+ * Get a quiz question.
  * @param {*} quizId the id of the quiz
  * @param {*} questionId question id to be retrieved.
  */
