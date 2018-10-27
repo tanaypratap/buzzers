@@ -4,7 +4,9 @@
  */
 import React from 'react';
 import QuizLayout from './QuizLayout';
-import { getAllQuiz, getQuizInfo } from '../../firebase-utils/firebase-client';
+import { getAllQuiz } from '../../firebase-utils/firebase-client';
+import { withRouter } from "react-router-dom";
+
 
 class QuizContainer extends React.Component {
     constructor(props){
@@ -28,8 +30,13 @@ class QuizContainer extends React.Component {
                     upcomingQuizes
                 })
             }
-        });
-        
+        });       
+    }
+
+    handleStartQuiz(event, id){
+        event.preventDefault();
+        console.log('Here is ', id);
+        this.props.history.push(`/quiz/${id}`)
     }
 
     render() {
@@ -37,10 +44,10 @@ class QuizContainer extends React.Component {
         return (
             <div>
                  {quizes && Object.keys(quizes)
-                    .map(id => <QuizLayout quizName={quizes[id].quiz_name} />)} 
+                    .map(id => <QuizLayout quizName={quizes[id].quiz_name} enterQuiz={(event) => {this.handleStartQuiz(event, id)}} />)} 
             </div>
         )
     }
 }
 
-export default QuizContainer
+export default withRouter(QuizContainer);

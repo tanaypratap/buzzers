@@ -54,14 +54,14 @@ export const getAllQuiz = function(callback) {
  * @param {*} quizId the id of the quiz
  * @param {*} questionId question id to be retrieved.
  */
-const getQuizQuestion = function(quizId, questionId) {
+export const getQuizQuestion = function(quizId, questionId, callback) {
     // the index is like quizquestions/{quizId}/{questionId} = question object
     var quizQuestionRef = firebase.app().database().ref(quizQuestionsIndex);
     var quizRef = quizQuestionRef.child(quizId);
     var questionRef = quizRef.child(questionId);
 
     questionRef.once("value", function(snapshot) {
-        console.log(snapshot.val());
+        callback(snapshot.val());
      }, function (error) {
         console.log("Error: " + error.code);
      });
@@ -194,7 +194,7 @@ firebase.initializeApp(config);
 // })
 
 //2. getting a quiz question.
-getQuizQuestion('-LPol7rwiaUYa9aYvmsD',1);
+// getQuizQuestion('-LPol7rwiaUYa9aYvmsD',1, (val) => { console.log(val)} );
 //3. starting a 1-1 quiz
 var challengeId = startQuizChallenge('-LPol7rwiaUYa9aYvmsD','jatin','shashank')
 console.log(challengeId);

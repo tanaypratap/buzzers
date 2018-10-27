@@ -53,7 +53,7 @@ class QuizLayout extends React.Component {
                   </CardContent>
                 </CardActionArea>
                 <CardActions>
-                  <Button variant="contained" color="primary" className={classes.button}>
+                  <Button variant="contained" color="primary" className={classes.button} onClick={this.props.enterQuiz}>
                     Start Quiz
                   </Button>
                 </CardActions>
