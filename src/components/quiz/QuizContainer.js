@@ -44,7 +44,7 @@ class QuizContainer extends React.Component {
         return (
             <div>
                  {quizes && Object.keys(quizes)
-                    .map(id => <QuizLayout quizName={quizes[id].quiz_name} enterQuiz={(event) => {this.handleStartQuiz(event, id)}} />)} 
+                    .map(id => <QuizLayout key={id} quizName={quizes[id].quiz_name} enterQuiz={(event) => {this.handleStartQuiz(event, id)}} />)} 
             </div>
         )
     }

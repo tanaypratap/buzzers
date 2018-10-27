@@ -18,19 +18,28 @@ class PlayArena extends Component{
     }
 
     getQuestion(){
-        setTimeout( () => {
+
+        let question;
+        let questionPromise = new Promise( (resolve, reject) => {
             const { quizId } = this.props.match.params;
             console.log("QuizID: ", quizId);
             const questionId = this.state.currentQuestion;
-            getQuizQuestion(quizId, questionId, (question) => {
-                console.log(question);
+            getQuizQuestion(quizId, questionId, (ques) => {
+                console.log(ques);
+                question = ques;
+                resolve();
+            });
+        });
+
+        questionPromise.then( (val) => {
+            setTimeout( () => {
                 this.setState({
                     question,
                     canAnswer: true,
                     message: ""
                 })
-            });
-        }, 5000)
+            }, 5000)
+        });
     }
 
     handleClick(event, answer){
@@ -81,7 +90,7 @@ class PlayArena extends Component{
                         </Button>                
                     </div>:
                     <div>
-                        <h4>Time for Quiz to start</h4>
+                        <h4>Time for Quiz to start: 5</h4>
                     </div>
                 }
                 {!this.state.canAnswer && 
