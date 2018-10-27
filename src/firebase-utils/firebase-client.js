@@ -9,7 +9,6 @@ const challengeQuizPlayResponseIndex = 'challengequizplayresponse'
 const tournamentQuizPlayIndex = "tournamentquizplay";
 const tournamentQuizPlayResponseIndex = 'tournamentquizplayresponse'
 
-
 /**
  * Add a quiz to firebase
  * @param {string} file 
@@ -51,6 +50,7 @@ export const getAllQuiz = function(callback) {
 };
 
 /**
+ * 
  * @param {*} quizId the id of the quiz
  * @param {*} questionId question id to be retrieved.
  */
@@ -112,7 +112,6 @@ const quizChallengeResponse = function(quizPlayId, questionId, user, response, i
     var challengeQuizPlayRef = firebase.app().database().ref(challengeQuizPlayIndex);
     challengeQuizPlayRef.child(quizPlayId).child(user).child("score").set(currentScore);
 }
-
 /**
  * Adding the user to teh tournament with isAlive = true, on any one queston isAlive becomes false and user can't continue.
  * @param {*} quizId 
@@ -170,6 +169,24 @@ const checkIfUserAlive = function(quizId, user) {
     });
 }
 
+const getResponsesForQuestion = function(quizId, questionId) {
+    var refPath = `${tournamentQuizPlayResponseIndex}/${quizId}/${questionId}`
+        
+        firebase.database().ref(refPath).once("value", function(snapshot) {
+            console.log(snapshot.val());
+        })
+}
+
+const getWinnersForTournamentQuiz = function(quizId) {
+    var refPath = `${tournamentQuizPlayIndex}/${quizId}`
+        
+        firebase.database().ref(refPath).orderByChild("isAlive").equalTo(true).once("value", function(snapshot) {
+            console.log(snapshot.val());
+        })
+}
+
+
+
 // config for firebase
 const config = {
     apiKey: 'AIzaSyDe8UizhOLkVq0WZgyree2XinGNbBbd1No',
@@ -201,9 +218,12 @@ console.log(challengeId);
 //4. response of a 1-1 quiz.
 quizChallengeResponse("-LPpExdwJIEJ_hweg_Gz",1,'jatin','23',false,4);
 
-
 //5 registerUser to quiz.
 addUserToTournamentQuiz('-LPol7rwiaUYa9aYvmsD','tanay');
-// register answer of user to quiz.
+//6. register answer of user to quiz.
 userTournamentQuizResponse('-LPol7rwiaUYa9aYvmsD',1,'tanay','375')
+//7. get the options to count map for users
+getResponsesForQuestion('-LPol7rwiaUYa9aYvmsD',1);
+//8. getWinners
+getWinnersForTournamentQuiz('-LPol7rwiaUYa9aYvmsD');
 
