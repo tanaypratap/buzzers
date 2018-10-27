@@ -1,3 +1,7 @@
+/**
+ * @description Router root for frontend routing
+ * @author Tanay Pratap <tanay.mit@gmail.com>
+ */
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import QuizContainer from './components/quiz';
