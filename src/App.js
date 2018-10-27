@@ -9,11 +9,20 @@ import {connect} from 'react-redux';
 import * as Actions from './actions/workActions';
 
 class App extends Component {
+  constructor(props){
+    super(props);
+    this.state = {}
+  }
   
+  componentWillReceiveProps(nextProps){
+    console.log(nextProps);
+  }
+
   render() {
+    
     return (
       <div className="App">
-        <h1> Start putting your code here </h1>
+        <h1> Start putting your code here</h1>
         <button onClick={this.props.sendTheAlert}>Click</button>
         <Quiz></Quiz>
       </div>
