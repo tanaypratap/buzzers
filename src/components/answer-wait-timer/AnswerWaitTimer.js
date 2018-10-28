@@ -11,7 +11,7 @@ const styles = theme => ({
     flexGrow: 1,
   },
   paper: {
-    padding: theme.spacing.unit,
+    padding: theme.spacing.unit * 4,
     textAlign: 'center',
     color: theme.palette.text.secondary,
     margin: '15px',
@@ -22,14 +22,16 @@ class AnswerWaitTimer extends React.Component {
     render() {
         const { classes } = this.props;
         return (
-          <div className="container">
+          <div className="container" style={{ backgroundColor: 'rgb(65, 37, 82)', minHeight: '100vh' }}>
             <div className="row" style={{ padding: '20px', paddingTop: '5vh' }}>
               <Grid item xs={12}>
                 <Paper className={classes.paper}>
                   <Typography variant="h5" component="h5">
-                    Wait for next question
+                    Next question up in
                     <br />
-                    {this.props.waitTime}
+                    <Typography variant="h4" component="h3">
+                      {this.props.waitTime}s
+                    </Typography>
                   </Typography>
                 </Paper>
               </Grid>
@@ -51,16 +53,19 @@ class AnswerWaitTimer extends React.Component {
                   </Typography>
                 </Paper>
               </Grid>
+              <br />
               <Grid item xs={12}>
                 <Paper className={classes.paper}>
                   <Typography variant="h5" component="h5">
-                    Users going ahead in quiz
+                    Number of users going ahead in quiz
                     <br />
-                    {this.props.remainingUsers}
+                    <Typography variant="h4" component="h3" style={{ color: '#2196f3' }}>
+                      {this.props.remainingUsers}
+                    </Typography>
                   </Typography>
                 </Paper>
               </Grid>
-              
+
             </div>
           </div>
 
