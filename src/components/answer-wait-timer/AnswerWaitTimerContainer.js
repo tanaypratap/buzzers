@@ -1,13 +1,21 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
+import AnswerWaitTimer from './AnswerWaitTimer'
 
 class AnswerWaitTimerContainer extends Component{
     constructor(props){
         super(props);
         this.timerId = 0;
+        this.state = {
+            remUsers: 0
+        }
     }
 
     componentDidMount(){
+        const remUsers = localStorage.getItem('remUsers') || 0;
+        this.setState({
+            remUsers
+        });
         this.timerId = 
             setTimeout( () => {
                 console.log('Wapas bhej rahe');
@@ -23,7 +31,7 @@ class AnswerWaitTimerContainer extends Component{
     render(){
         return(
             <div>
-                <h2>Hello There</h2>
+                <AnswerWaitTimer waitTime={5} remainingUsers={this.state.remUsers}/>
             </div>
         )
     }

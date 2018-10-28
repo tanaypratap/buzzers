@@ -59,7 +59,7 @@ class ProtectedRoutes extends React.Component {
         </Switch>
       </Router>;
   }
-  
+
 }
 
 ProtectedRoutes = withRouter(ProtectedRoutes)
