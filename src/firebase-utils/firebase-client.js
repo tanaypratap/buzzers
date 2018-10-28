@@ -8,7 +8,7 @@ export const tournamentQuizPlayIndex = "tournamentquizplay";
 export const tournamentQuizPlayResponseIndex = 'tournamentquizplayresponse'
 const userIndex = "users";
 
-const demoTimeInMillis = 120000
+const demoTimeInMillis = 60000
 
 /**
  * Add a quiz to firebase
