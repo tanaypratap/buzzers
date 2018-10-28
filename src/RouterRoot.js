@@ -16,6 +16,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import AnswerWaitTimerContainer from './components/answer-wait-timer/AnswerWaitTimerContainer';
 
 const styles = {
   root: {
@@ -52,7 +53,8 @@ function Root(props){
                   <Route exact path="/" component={QuizListContainer} />
                   <Route path="/test-app" component={App} />
                   <Route path="/quiz/:quizId" component={PlayArenaContainer} />
-                  <Route exact path="/wait-for-quiz-start/:quizId" component={QuizStartTimerContainer} />
+                  <Route path="/wait-for-quiz-start/:quizId" component={QuizStartTimerContainer} />
+                  <Route path="/answer-wait-time" component={AnswerWaitTimerContainer} />
               </Switch>
             </div>
         </Router>

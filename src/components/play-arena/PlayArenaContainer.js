@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { getQuizQuestion, userTournamentQuizResponse, getQuiz } from "./../../firebase-utils/firebase-client";   
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import { withRouter } from "react-router-dom";
 
 const styles = theme => ({
   button: {
@@ -24,18 +25,45 @@ class PlayArenaContainer extends Component{
             question: null,
             canAnswer: true,
             message: "",
-            gameOver: false
+            gameOver: false,
+            totalQuestions: 6
         }
+        this.timerId = 0;
     }
 
     componentDidMount(){
-        this.getQuestion();
+        const currentQuestion = parseInt(localStorage.getItem('id')) || 1;
+        if(currentQuestion === this.state.totalQuestions){
+            localStorage.clear();
+            this.props.history.push('/score');
+        }
+        if(currentQuestion === 1){
+            this.getQuestion();
+            localStorage.setItem('qId', this.props.match.params.quizId);
+        }
+        else{
+            this.setState({
+                currentQuestion
+            }, () => {this.getQuestion()})
+        }
+        this.timerId = 
+            setTimeout( () => {
+                console.log('Bhej rhe');
+                const nextQuestion = this.state.currentQuestion+1;
+                console.log('Next Question: ', nextQuestion);
+                localStorage.setItem('id', nextQuestion);
+                this.props.history.push(`/answer-wait-time`);    
+            }, 10000);
+    }
+
+    componentWillUnmount(){
+        clearTimeout(this.timerId);
     }
 
     getQuestion(){
 
         let question;
-        let questionPromise = new Promise( (resolve, reject) => {
+        let firebasePromise = new Promise( (resolve, reject) => {
             const { quizId } = this.props.match.params;
             const questionId = this.state.currentQuestion;
             console.log(questionId);
@@ -46,21 +74,24 @@ class PlayArenaContainer extends Component{
             });
         });
 
-        questionPromise.then( (val) => {
-            setTimeout( () => {
-                this.setState({
-                    question,
-                    canAnswer: true,
-                    message: ""
-                })
-            }, 5000)
+        let questionPromise = new Promise( (resolve, reject) => {
+            firebasePromise.then( (val) => {
+                setTimeout( () => {
+                    this.setState({
+                        question,
+                        canAnswer: true,
+                        message: ""
+                    });
+                    resolve();
+                }, 3000)
+            });
         });
+
     }
 
     handleClick(event, answer){
         event.preventDefault();
         let message= "";
-        let currentQuestion = this.state.currentQuestion;
         (answer === this.state.question.correctAnswer)?
             message="Correct":
             message="Incorrect";
@@ -75,9 +106,6 @@ class PlayArenaContainer extends Component{
             this.setState({
                 canAnswer: false,
                 message,
-                currentQuestion: currentQuestion+1,
-            }, () => { 
-                this.getQuestion()
             });
         }
     }
@@ -85,8 +113,10 @@ class PlayArenaContainer extends Component{
     render(){
         const { classes } = this.props;
         return(
-            
+                
             <div className="container" style={{ backgroundColor: '#2f0338', minHeight: '100vh' }}>
+              
+              <div>
               { !this.state.gameOver ?
               <div className="row" style={{ paddingTop: '5vh' }}>
                 {
@@ -144,6 +174,8 @@ class PlayArenaContainer extends Component{
                     <h2>Game Over</h2>
                 </div>
                 }
+                </div>
+              
             </div>
             
         )
@@ -154,4 +186,4 @@ PlayArenaContainer.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(PlayArenaContainer)
+export default withRouter(withStyles(styles)(PlayArenaContainer));
