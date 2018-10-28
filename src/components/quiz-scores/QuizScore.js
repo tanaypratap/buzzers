@@ -7,6 +7,7 @@ import Grid from '@material-ui/core/Grid';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import Avatar from '@material-ui/core/Avatar';
 import ImageIcon from '@material-ui/icons/Image';
 
@@ -20,14 +21,13 @@ const styles = theme => ({
     textAlign: 'center',
     color: theme.palette.text.secondary,
   },
-  primary: {
-    fontSize: '18px'
-  }
+
 });
 
 class QuizScore extends React.Component {
     render() {
         const { classes } = this.props;
+        console.log('winners', this.props.winnersList);
         return (
           <div className="container">
             <div className="row" style={{ padding: '20px', paddingTop: '5vh' }}>
@@ -36,7 +36,9 @@ class QuizScore extends React.Component {
                   <Typography variant="h5" component="h5">
                     Number of questions you answered
                     <br />
-                    <span style={{ fontSize: '70px', color: '#2196f3' }}>{this.props.numberofQuestionsAnswered}</span>
+                    {
+                      <span style={{ fontSize: '70px', color: '#2196f3' }}>{this.props.numberofQuestionsAnswered ? this.props.numberofQuestionsAnswered : 0}</span>
+                    }
                   </Typography>
                 </Paper>
               </Grid>
@@ -53,13 +55,14 @@ class QuizScore extends React.Component {
 
                   <div className={classes.root}>
                     {
-                      this.props.winnersList.map(eachWinner =>
-                      <List key={eachWinner}>
+                      Object.keys(this.props.winnersList).map(eachWinner =>
+                      <List key={this.props.winnersList[eachWinner]}>
                         <ListItem>
-                          <Avatar>
-                            <ImageIcon />
-                          </Avatar>
-                          <ListItemText primary={eachWinner} className={classes.primary}/>
+                          <Avatar alt="photo" src={this.props.winnersList[eachWinner].photoURL} />
+                          <ListItemText primary={this.props.winnersList[eachWinner].displayName} className={classes.primary}/>
+                          <ListItemSecondaryAction>
+                            <ListItemText primary={this.props.winnersList[eachWinner].score} className={classes.primary} />
+                          </ListItemSecondaryAction>
                         </ListItem>
                       </List>
                       )
