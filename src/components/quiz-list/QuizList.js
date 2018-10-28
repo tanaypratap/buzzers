@@ -4,14 +4,12 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-import './Quiz.css'
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 
 const styles = theme => ({
@@ -26,7 +24,7 @@ const styles = theme => ({
   }
 });
 
-class QuizLayout extends React.Component {
+class QuizList extends React.Component {
     componentDidMount() {
         console.log('This needs to be removed');
     }
@@ -61,9 +59,9 @@ class QuizLayout extends React.Component {
     }
 }
 
-QuizLayout.propTypes = {
+QuizList.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
 
-export default withStyles(styles)(QuizLayout)
+export default withStyles(styles)(QuizList)
