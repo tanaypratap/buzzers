@@ -1,20 +1,31 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { getQuizQuestion, userTournamentQuizResponse, getQuiz } from "./../../firebase-utils/firebase-client";   
+import { getQuizQuestion, userTournamentQuizResponse, getQuiz } from "./../../firebase-utils/firebase-client";
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { withRouter } from "react-router-dom";
+import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
+import './PlayArena.css'
 
 const styles = theme => ({
   button: {
     margin: theme.spacing.unit,
+    marginTop: '0px',
     padding: '20px',
     width: '100%',
     color: 'black',
     backgroundColor: 'white',
     fontSize: '20px',
-  }
+    border: '1px solid rgb(255, 255, 255)'
+  },
+  paper: {
+    padding: theme.spacing.unit,
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+    backgroundColor: 'rgb(47, 3, 56)',
+  },
 });
 
 class PlayArenaContainer extends Component{
@@ -46,13 +57,13 @@ class PlayArenaContainer extends Component{
                 currentQuestion
             }, () => {this.getQuestion()})
         }
-        this.timerId = 
+        this.timerId =
             setTimeout( () => {
                 console.log('Bhej rhe');
                 const nextQuestion = this.state.currentQuestion+1;
                 console.log('Next Question: ', nextQuestion);
                 localStorage.setItem('id', nextQuestion);
-                this.props.history.push(`/answer-wait-time`);    
+                this.props.history.push(`/answer-wait-time`);
             }, 10000);
     }
 
@@ -113,25 +124,25 @@ class PlayArenaContainer extends Component{
     render(){
         const { classes } = this.props;
         return(
-                
+
             <div className="container" style={{ backgroundColor: '#2f0338', minHeight: '100vh' }}>
-              
+
               <div>
               { !this.state.gameOver ?
-              <div className="row" style={{ paddingTop: '5vh' }}>
+              <div className="row" style={{ paddingTop: '3vh' }}>
                 {
                   !this.state.canAnswer &&
                     <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', alignItems: 'center' }}>
                       <Typography gutterBottom variant="h5" component="h2" style={{ color: '#ffffff' }}>
-                        Remaining Time for next question: 5
+                        Remaining Time: 5s
                       </Typography>
                     </div>
                 }
                 {this.state.question ?
                     <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
-                        <div style={{ height: '200px', display: 'flex', justifyContent: 'center', flexWrap: 'wrap', alignItems: 'center', padding: '15px' }}>
+                        <div style={{ minHeight: '100px', display: 'flex', justifyContent: 'center', flexWrap: 'wrap', alignItems: 'center'  }}>
                           <Typography gutterBottom variant="h5" component="h1" style={{ color: 'white' }}>
-                            Question: {this.state.question.questionText}
+                            {this.state.question.questionText}
                           </Typography>
                         </div>
                         <Button variant="outlined" className={classes.button} type="button"
@@ -158,11 +169,15 @@ class PlayArenaContainer extends Component{
                             {this.state.question.option4}
                         </Button>
                     </div>:
-                    <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', alignItems: 'center', padding: '20px', paddingTop: '40vh' }}>
+                    <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', alignItems: 'center', padding: '20px', paddingTop: '40%' }}>
                       <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', alignItems: 'center' }}>
-                        <Typography gutterBottom variant="h3" component="h2" style={{ color: '#ffffff' }}>
-                          Time for Quiz to start: 5
-                        </Typography>
+                        <Grid item xs={12}>
+                          <Paper className={classes.paper}>
+                            <Typography gutterBottom variant="h3" component="h2" style={{ color: '#ffffff' }}>
+                              Quiz starts in <br /> 5s
+                            </Typography>
+                          </Paper>
+                        </Grid>
                       </div>
                     </div>
                 }
@@ -175,9 +190,9 @@ class PlayArenaContainer extends Component{
                 </div>
                 }
                 </div>
-              
+
             </div>
-            
+
         )
     }
 }
