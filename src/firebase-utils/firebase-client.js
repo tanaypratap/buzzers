@@ -258,6 +258,7 @@ export const createDemoQuiz = function(user) {
  */
 export const getWinnersForTournamentQuiz = function(quizId, callback) {
     var refPath = `${tournamentQuizPlayIndex}/${quizId}`
+    console.log(refPath);
         firebase.database().ref(refPath).orderByChild("score").startAt(1).limitToLast(1).once("value", function(snapshot) {
             var keys = Object.keys(snapshot.val());
             var score = snapshot.val()[keys[0]]["score"]
@@ -273,13 +274,10 @@ export const getWinnersForTournamentQuiz = function(quizId, callback) {
  * @param {*} callback 
  */
 export const getFinalUserScore = function(quizId,user, callback) {
-    console.log(user);
     var refPath = `${tournamentQuizPlayIndex}/${quizId}/${user.uid}/score`;
-    console.log(user);
-    console.log(refPath);
-        firebase.database().ref(refPath).once("value", function(snapshot) {
-            callback(snapshot.val());
-        })
+    firebase.database().ref(refPath).once("value", function(snapshot) {
+        callback(snapshot.val());
+    })
 }
 
 // config for firebase

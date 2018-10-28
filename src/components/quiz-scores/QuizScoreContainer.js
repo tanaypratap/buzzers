@@ -5,13 +5,14 @@
 import React from 'react';
 import QuizScore from './QuizScore';
 import { withRouter } from "react-router-dom";
-import { getFinalUserScore } from '../../firebase-utils/firebase-client';
+import { getFinalUserScore, getWinnersForTournamentQuiz } from '../../firebase-utils/firebase-client';
 
 class QuizScoreContainer extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            finalScore: 0
+            finalScore: 0,
+            winners: []
         }
     }
     componentDidMount() {
@@ -25,11 +26,16 @@ class QuizScoreContainer extends React.Component {
                 finalScore: val
             })
         })
+        getWinnersForTournamentQuiz(quizId, (val) => {
+            this.setState({
+                winners: val
+            })
+        })
     }
     render() {
         return (
             <div>
-                <QuizScore numberofQuestionsAnswered = {this.state.finalScore} winnersList = {['a', 'b']} />
+                <QuizScore numberofQuestionsAnswered = {this.state.finalScore} winnersList = {this.state.winners} />
             </div>
         )
     }
