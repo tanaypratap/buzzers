@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { getQuizQuestion, userTournamentQuizResponse, checkIfUserAlive } from "./../../firebase-utils/firebase-client";   
+import { getQuizQuestion, userTournamentQuizResponse, checkIfUserAlive } from "./../../firebase-utils/firebase-client";
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { withRouter } from "react-router-dom";
@@ -18,7 +18,19 @@ const styles = theme => ({
     color: 'black',
     backgroundColor: 'white',
     fontSize: '20px',
-    border: '1px solid rgb(255, 255, 255)'
+    border: '1px solid rgb(255, 255, 255)',
+    '&:hover': {
+      backgroundColor: '#0069d9',
+      borderColor: '#0062cc',
+    },
+    '&:active': {
+      boxShadow: 'none',
+      backgroundColor: '#0062cc',
+      borderColor: '#005cbf',
+    },
+    '&:focus': {
+      boxShadow: '0 0 0 0.2rem rgba(0,123,255,.5)',
+    },
   },
   paper: {
     padding: theme.spacing.unit,
@@ -45,11 +57,11 @@ class PlayArenaContainer extends Component{
     }
 
     componentDidMount(){
-        
+
         const { quizId } = this.props.match.params
 
         let promise = new Promise( (resolve, reject) => {
-            checkIfUserAlive( quizId, 'shashank', (val) => {
+            checkIfUserAlive(quizId, 'jatin', (val) => {
                 console.log('Here');
                 if(!val){
                     this.setState({
@@ -78,10 +90,11 @@ class PlayArenaContainer extends Component{
                     currentQuestion
                 }, () => {this.getQuestion()})
             }
+
             this.timerId =
                 setTimeout( () => {
                     if(!this.state.hasAnswered){
-                        userTournamentQuizResponse(quizId, this.state.currentQuestion, 'shashank', null)
+                        userTournamentQuizResponse(quizId, this.state.currentQuestion, 'jatin', null)
                     }
                     console.log('Bhej rhe');
                     const nextQuestion = this.state.currentQuestion+1;
@@ -92,7 +105,7 @@ class PlayArenaContainer extends Component{
         });
 
 
-        
+
     }
 
     componentWillUnmount(){
@@ -138,7 +151,7 @@ class PlayArenaContainer extends Component{
             message="Correct":
             message="Incorrect";
         const { quizId } = this.props.match.params;
-        userTournamentQuizResponse(quizId, this.state.currentQuestion, 'shashank', answer);
+        userTournamentQuizResponse(quizId, this.state.currentQuestion, 'jatin', answer);
         if(message === "Incorrect"){
             this.setState({
                 gameOver: true
@@ -159,7 +172,7 @@ class PlayArenaContainer extends Component{
             <div className="container" style={{ backgroundColor: '#2f0338', minHeight: '100vh' }}>
 
               <div>
-              
+
               <div className="row" style={{ paddingTop: '5vh' }}>
                 {
                   !this.state.canAnswer &&
@@ -216,7 +229,7 @@ class PlayArenaContainer extends Component{
                     <h4>{this.state.message}</h4>
                 }
               </div>
-                
+
                 </div>
 
             </div>
