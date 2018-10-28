@@ -22,8 +22,8 @@ class PlayArena extends Component{
         let question;
         let questionPromise = new Promise( (resolve, reject) => {
             const { quizId } = this.props.match.params;
-            console.log("QuizID: ", quizId);
             const questionId = this.state.currentQuestion;
+            console.log(questionId);
             getQuizQuestion(quizId, questionId, (ques) => {
                 console.log(ques);
                 question = ques;
@@ -53,7 +53,7 @@ class PlayArena extends Component{
             canAnswer: false,
             message,
             currentQuestion: currentQuestion+1,
-        }, this.getQuestion());
+        }, () => {this.getQuestion()});
     }
 
     render(){
