@@ -36,7 +36,6 @@ class QuizList extends React.Component {
     }
 
     componentDidMount() {
-        console.log(this.props.remainingTime);
         if(this.props.remainingTime < 900000){
           this.setState({
             button: true
