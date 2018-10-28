@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { getQuizQuestion } from "./../../firebase-utils/firebase-client";
+import { getQuizQuestion, userTournamentQuizResponse, getQuiz } from "./../../firebase-utils/firebase-client";   
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
@@ -63,6 +63,8 @@ class PlayArenaContainer extends Component{
         (answer === this.state.question.correctAnswer)?
             message="Correct":
             message="Incorrect";
+        const { quizId } = this.props.match.params;
+        userTournamentQuizResponse(quizId, this.state.currentQuestion, 'shashank', answer);
         this.setState({
             canAnswer: false,
             message,
