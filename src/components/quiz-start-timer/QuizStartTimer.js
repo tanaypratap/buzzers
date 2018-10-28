@@ -33,6 +33,13 @@ class QuizStartTimer extends React.Component {
                   </Typography>
                 </Paper>
               </Grid>
+              <Grid item xs={12}>
+                <Paper className={classes.paper}>
+                  <Typography variant="h4" component="h3" style={{ color: '#ffffff', paddingTop: '15%' }}>
+                   {this.props.usersJoined} Users have joined so far !!
+                  </Typography>
+                </Paper>
+              </Grid>
             </div>
           </div>
         )
