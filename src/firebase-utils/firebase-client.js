@@ -241,9 +241,9 @@ export const getResponsesForQuestion = function(quizId, questionId, callback) {
         })
 }
 
-<<<<<<< HEAD
-const createDemoQuiz = function (user) {
+export const createDemoQuiz = function (userDisplayName) {
     const refPath = `quiz`;
+    console.log(userDisplayName);
     firebase.database().ref(refPath).once("value", function (snapshot) {
         const existingQuizobj = snapshot.val();
         var keys = Object.keys(existingQuizobj);
@@ -252,7 +252,7 @@ const createDemoQuiz = function (user) {
         console.log(quizId);
         var newQuizRef = firebase.app().database().ref('quiz');
         var newQuizObj = {
-            "quiz_name": user.displayName + " Quiz", "quiz_tag": "DemoQuiz", questionCount: existingQuizobj[quizId].questionCount, userCount: 0,
+            "quiz_name": userDisplayName + " Quiz", "quiz_tag": "DemoQuiz", questionCount: existingQuizobj[quizId].questionCount, userCount: 0,
             startTime: Date.now() + 120000
         }
         newQuizRef.push(newQuizObj).then((snapshot) => {
@@ -275,17 +275,6 @@ const createDemoQuiz = function (user) {
             }
         });
     });
-=======
-export const createDemoQuiz = function(user) {
-    const directoyPath = path.resolve("../../demo-quiz-bank");
-    console.log(directoyPath);
-    // fs.readdir(directoyPath,function(err, files) {
-    //     var filesCount = files.length;
-    //     var fileIndex = Math.floor(Math.random() * filesCount);
-    var startTime = Date.now() + demoTimeInMillis;
-    addQuestionToFirebase(directoyPath + "/DemoQuiz1" , user + " Quiz", startTime);
-    // })
->>>>>>> a52aafd823056a62a266a372dbd8d0d589979d9e
 }
 /**
  * gets all the winners

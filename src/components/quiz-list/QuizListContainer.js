@@ -43,7 +43,7 @@ class QuizListContainer extends React.Component {
     }
 
     handleClick(){
-        const user = localStorage.getItem('user');
+        const user = JSON.parse(localStorage.getItem('user'));
         createDemoQuiz(user.displayName);
     }
 
