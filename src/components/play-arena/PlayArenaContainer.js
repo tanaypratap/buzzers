@@ -51,7 +51,8 @@ class PlayArenaContainer extends Component{
             message: "",
             gameOver: false,
             totalQuestions: 100,
-            userOut: false
+            userOut: false,
+            waitTime: 10
         }
         this.timerId = 0;
     }
@@ -88,21 +89,31 @@ class PlayArenaContainer extends Component{
 
         promise.then( () => {
             const currentQuestion = parseInt(localStorage.getItem('id')) || 1;
-            if(currentQuestion === this.state.totalQuestions){
-                this.props.history.push('/scores');
-                return;
-            }
-            if(currentQuestion === 1){
-                this.getQuestion();
-                localStorage.setItem('qId', this.props.match.params.quizId);
-            }
-            else{
-                this.setState({
-                    currentQuestion
-                }, () => {this.getQuestion()})
-            }
 
-            this.timerId =
+            let gettingQuesPromise = new Promise( (resolve, reject) => {
+                if(currentQuestion === this.state.totalQuestions){
+                    this.props.history.push('/scores');
+                    return;
+                }
+                if(currentQuestion === 1){
+                    this.getQuestion();
+                    localStorage.setItem('qId', this.props.match.params.quizId);
+                }
+                else{
+                    this.setState({
+                        currentQuestion
+                    }, () => {this.getQuestion()})
+                }
+                resolve();
+            });
+
+            gettingQuesPromise.then( () => {
+                this.runningTimer = setInterval(() => {
+                    this.setState({ waitTime: this.state.waitTime - 1})
+                }, 1000);
+
+
+                this.timerId =
                 setTimeout( () => {
                     if(!this.state.hasAnswered){
                         userTournamentQuizResponse(quizId, this.state.currentQuestion, user.uid, null)
@@ -124,12 +135,14 @@ class PlayArenaContainer extends Component{
                     })
 
                 }, 10000);
-        });
 
+                })
+        });
     }
 
     componentWillUnmount(){
         clearTimeout(this.timerId);
+        clearTimeout(this.runningTimer);
     }
 
     getQuestion(){
@@ -148,14 +161,14 @@ class PlayArenaContainer extends Component{
 
         let questionPromise = new Promise( (resolve, reject) => {
             firebasePromise.then( (val) => {
-                setTimeout( () => {
-                    this.setState({
-                        question,
-                        canAnswer: true,
-                        message: ""
-                    });
-                    resolve();
-                }, 3000)
+                
+                this.setState({
+                    question,
+                    canAnswer: true,
+                    message: ""
+                }, () => {resolve();});
+                
+     
             });
         });
 
@@ -189,22 +202,12 @@ class PlayArenaContainer extends Component{
     render(){
         const { classes } = this.props;
         return(
-
             <div className="container" style={{ backgroundColor: '#2f0338', minHeight: '100vh' }}>
-
               <div>
-
               <div className="row" style={{ paddingTop: '5vh' }}>
-                {
-                  !this.state.canAnswer &&
-                    <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', alignItems: 'center' }}>
-                      <Typography gutterBottom variant="h5" component="h2" style={{ color: '#ffffff' }}>
-                        Remaining Time: 5s
-                      </Typography>
-                    </div>
-                }
-                {this.state.question ?
+                {this.state.question &&
                     <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
+                        <p style={{ color: 'white' }}>{this.state.waitTime}</p>
                         <div style={{ minHeight: '100px', display: 'flex', justifyContent: 'center', flexWrap: 'wrap', alignItems: 'center', padding: '15px'  }}>
                           <Typography gutterBottom variant="h5" component="h1" style={{ color: 'white' }}>
                             {this.state.question.questionText}
@@ -233,17 +236,6 @@ class PlayArenaContainer extends Component{
                             disabled={!this.state.canAnswer || this.state.userOut}>
                             {this.state.question.option4}
                         </Button>
-                    </div>:
-                    <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', alignItems: 'center', padding: '20px', paddingTop: '40%' }}>
-                      <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', alignItems: 'center' }}>
-                        <Grid item xs={12}>
-                          <Paper className={classes.paper}>
-                            <Typography gutterBottom variant="h3" component="h2" style={{ color: '#ffffff' }}>
-                              Quiz starts in <br /> 5s
-                            </Typography>
-                          </Paper>
-                        </Grid>
-                      </div>
                     </div>
                 }
 
