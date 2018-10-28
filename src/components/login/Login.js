@@ -1,6 +1,7 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { firebaseAuth, googleProvider } from '../../firebase';
+import {createUserIfNotExists} from "../../firebase-utils/firebase-client"
 
 class Login extends React.Component {
     componentDidMount() {
@@ -16,7 +17,9 @@ class Login extends React.Component {
         firebaseAuth().onAuthStateChanged(user => {
             if (user) {
                 const { displayName, photoURL, uid, email } = user;
-                localStorage.setItem('user', JSON.stringify({ displayName, photoURL, uid, email }));
+                const userInfo = {displayName, photoURL, uid, email};
+                createUserIfNotExists(userInfo);
+                localStorage.setItem('user', JSON.stringify(userInfo));
                 this.props.history.push('/');
             } 
         })
