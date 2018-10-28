@@ -283,8 +283,8 @@ export const createDemoQuiz = function (userDisplayName) {
 export const getWinnersForTournamentQuiz = function (quizId, callback) {
     var refPath = `${tournamentQuizPlayIndex}/${quizId}`
     firebase.database().ref(refPath).orderByChild("score").startAt(1).limitToLast(1).once("value", function (snapshot) {
-        var keys = Object.keys(snapshot.val());
-        if (keys.length > 0) {
+        if (snapshot.val()) {
+            var keys = Object.keys(snapshot.val());
             var score = snapshot.val()[keys[0]]["score"]
             firebase.database().ref(refPath).orderByChild("score").equalTo(score).on("value", function (snapshot) {
                 callback(snapshot.val());
