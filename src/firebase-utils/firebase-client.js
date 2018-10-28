@@ -280,15 +280,19 @@ export const createDemoQuiz = function (userDisplayName) {
  * @param {*} quizId 
  * @param {*} callback 
  */
-export const getWinnersForTournamentQuiz = function(quizId, callback) {
+export const getWinnersForTournamentQuiz = function (quizId, callback) {
     var refPath = `${tournamentQuizPlayIndex}/${quizId}`
-        firebase.database().ref(refPath).orderByChild("score").startAt(1).limitToLast(1).once("value", function(snapshot) {
-            var keys = Object.keys(snapshot.val());
+    firebase.database().ref(refPath).orderByChild("score").startAt(1).limitToLast(1).once("value", function (snapshot) {
+        var keys = Object.keys(snapshot.val());
+        if (keys.length > 0) {
             var score = snapshot.val()[keys[0]]["score"]
-            firebase.database().ref(refPath).orderByChild("score").equalTo(score).on("value", function(snapshot) {
+            firebase.database().ref(refPath).orderByChild("score").equalTo(score).on("value", function (snapshot) {
                 callback(snapshot.val());
             })
-        })
+        } else {
+            callback({});
+        }
+    })
 }
 /**
  * get the final user score from the db.
