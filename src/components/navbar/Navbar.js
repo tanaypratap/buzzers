@@ -43,7 +43,7 @@ class Navbar extends React.Component {
       <div className={classes.root}>
         <AppBar position="static" style={{ backgroundColor: '#3b1452' }}>
           <Toolbar>
-            <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
+            <IconButton className={classes.menuButton} color="inherit" aria-label="Menu" onClick={() => this.props.history.push('/')}>
               <img src="/images/buzzers.png" alt="buzzers logo" style={{ borderRadius: '55%' }}/>
             </IconButton>
             <Typography variant="h5" color="inherit" className={classes.grow}>

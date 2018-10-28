@@ -1,6 +1,7 @@
 import React from 'react'
 import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom'
 import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
@@ -9,7 +10,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import Avatar from '@material-ui/core/Avatar';
-import ImageIcon from '@material-ui/icons/Image';
+import Button from '@material-ui/core/Button';
 
 const styles = theme => ({
   root: {
@@ -69,6 +70,10 @@ class QuizScore extends React.Component {
                   </div>
                 </Paper>
               </Grid>
+              <br />
+              <Grid item xs={12} container direction="row" justify="center" alignItems="center">
+                <Button variant="contained" color="primary" onClick={() => this.props.history.push('/') }>Play More</Button>
+              </Grid>
             </div>
           </div>
         )
@@ -79,4 +84,4 @@ QuizScore.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(QuizScore);
+export default withStyles(styles)(withRouter(QuizScore));
