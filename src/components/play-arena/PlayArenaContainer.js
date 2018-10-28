@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { getQuizQuestion, userTournamentQuizResponse, getQuiz } from "./../../firebase-utils/firebase-client";   
+import { getQuizQuestion, userTournamentQuizResponse, getQuiz } from "./../../firebase-utils/firebase-client";
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import './PlayArena.css'
 
 const styles = theme => ({
   button: {
@@ -13,6 +14,7 @@ const styles = theme => ({
     color: 'black',
     backgroundColor: 'white',
     fontSize: '20px',
+    border: '1px solid rgb(255, 255, 255)'
   }
 });
 
@@ -89,34 +91,34 @@ class PlayArenaContainer extends Component{
                     <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
                         <div style={{ height: '200px', display: 'flex', justifyContent: 'center', flexWrap: 'wrap', alignItems: 'center', padding: '15px' }}>
                           <Typography gutterBottom variant="h5" component="h1" style={{ color: 'white' }}>
-                            Question: {this.state.question.questionText}
+                            {this.state.question.questionText}
                           </Typography>
                         </div>
-                        <Button variant="outlined" className={classes.button} type="button"
+                        <Button id="#btn" variant="outlined" className={classes.button} type="button"
                             onClick={ (event) => this.handleClick(event, this.state.question.option1)}
                             disabled={!this.state.canAnswer}>
                             {this.state.question.option1}
                         </Button>
                         <br /><br />
-                        <Button variant="outlined" className={classes.button} type="button"
+                        <Button id="#btn" variant="outlined" className={classes.button} type="button"
                             onClick={ (event) => this.handleClick(event, this.state.question.option2)}
                             disabled={!this.state.canAnswer}>
                             {this.state.question.option2}
                         </Button>
                         <br /><br />
-                        <Button variant="outlined" className={classes.button} type="button"
+                        <Button id="#btn" variant="outlined" className={classes.button} type="button"
                             onClick={ (event) => this.handleClick(event, this.state.question.option3)}
                             disabled={!this.state.canAnswer}>
                             {this.state.question.option3}
                         </Button>
                         <br /><br />
-                        <Button variant="outlined" className={classes.button} type="button"
+                        <Button id="#btn" variant="outlined" className={classes.button} type="button"
                             onClick={ (event) => this.handleClick(event, this.state.question.option4)}
                             disabled={!this.state.canAnswer}>
                             {this.state.question.option4}
                         </Button>
                     </div>:
-                    <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', alignItems: 'center', padding: '20px', paddingTop: '40vh' }}>
+                    <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', alignItems: 'center', padding: '20px', paddingTop: '30vh' }}>
                       <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', alignItems: 'center' }}>
                         <Typography gutterBottom variant="h3" component="h2" style={{ color: '#ffffff' }}>
                           Time for Quiz to start: 5
