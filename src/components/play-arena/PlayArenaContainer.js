@@ -168,14 +168,14 @@ class PlayArenaContainer extends Component{
 
         let questionPromise = new Promise( (resolve, reject) => {
             firebasePromise.then( (val) => {
-                
+
                 this.setState({
                     question,
                     canAnswer: true,
- 
+
                 }, () => {resolve();});
-                
-     
+
+
             });
         });
 
@@ -205,7 +205,9 @@ class PlayArenaContainer extends Component{
               <div className="row" style={{ paddingTop: '5vh' }}>
                 {this.state.question &&
                     <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
-                        <p style={{ color: 'white' }}>{this.state.waitTime}</p>
+                        <Typography gutterBottom variant="h5" component="h4" style={{ color: 'white' }}>
+                          Remaining Time: {this.state.waitTime}s
+                        </Typography>
                         <div style={{ minHeight: '100px', display: 'flex', justifyContent: 'center', flexWrap: 'wrap', alignItems: 'center', padding: '15px'  }}>
                           <Typography gutterBottom variant="h5" component="h1" style={{ color: 'white' }}>
                             {this.state.question.questionText}
