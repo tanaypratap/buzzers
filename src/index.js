@@ -20,5 +20,5 @@ ReactDOM.render(
 </Provider>, 
 document.getElementById('root'));
 
-
+// This registers a service worker
 serviceWorker.register();
