@@ -238,14 +238,39 @@ export const getResponsesForQuestion = function(quizId, questionId, callback) {
         })
 }
 
-export const createDemoQuiz = function(user) {
-    const directoyPath = path.resolve("../../demo-quiz-bank");
-    fs.readdir(directoyPath,function(err, files) {
-        var filesCount = files.length;
-        var fileIndex = Math.floor(Math.random() * filesCount);
-        var startTime = Date.now() + demoTimeInMillis;
-        addQuestionToFirebase(directoyPath + "/" + files[fileIndex], user + " Quiz", startTime);
-    })
+const createDemoQuiz = function (user) {
+    const refPath = `quiz`;
+    firebase.database().ref(refPath).once("value", function (snapshot) {
+        const existingQuizobj = snapshot.val();
+        var keys = Object.keys(existingQuizobj);
+        var randomIndex = Math.floor(Math.random() * keys.length);
+        var quizId = keys[randomIndex];
+        console.log(quizId);
+        var newQuizRef = firebase.app().database().ref('quiz');
+        var newQuizObj = {
+            "quiz_name": user.displayName + " Quiz", "quiz_tag": "DemoQuiz", questionCount: existingQuizobj[quizId].questionCount, userCount: 0,
+            startTime: Date.now() + 120000
+        }
+        newQuizRef.push(newQuizObj).then((snapshot) => {
+            // get the quizId.
+            const newQuizId = snapshot.key
+            for (let i = 1; i <= existingQuizobj[quizId].questionCount; i++) {
+                firebase.database().ref(`quizquestions/${quizId}/${i}`).once("value", function (oldQuizSnapshot) {
+                    const oldQuizQuestion = oldQuizSnapshot.val();
+                    var quizQuestionRef = firebase.app().database().ref('quizquestions');
+                    quizQuestionRef.child(newQuizId).child(i).set(
+                        {
+                            "questionText": oldQuizQuestion.questionText,
+                            "option1": oldQuizQuestion.option1,
+                            "option2": oldQuizQuestion.option2,
+                            "option3": oldQuizQuestion.option3,
+                            "option4": oldQuizQuestion.option4,
+                            "correctAnswer": oldQuizQuestion.correctAnswer
+                        })
+                });
+            }
+        });
+    });
 }
 /**
  * gets all the winners
