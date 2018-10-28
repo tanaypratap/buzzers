@@ -36,28 +36,25 @@ class QuizLayout extends React.Component {
         return (
           <div className="container">
             <div className="row">
-              <Card className={classes.card}>
-                <CardActionArea>
-                  <CardMedia
-                    className={classes.media}
-                    image="/images/gk_thumbnail.jpg"
-                    title="Competitive"
-                  />
-                  <CardContent>
-                    <Typography gutterBottom variant="h5" component="h2">
-                      {this.props.quizName}
-                    </Typography>
-                    <Typography component="p">
-                      Test your general knowledge
-                    </Typography>
-                  </CardContent>
-                </CardActionArea>
-                <CardActions>
-                  <Button variant="contained" color="primary" className={classes.button} onClick={this.props.enterQuiz}>
-                    Start Quiz
-                  </Button>
-                </CardActions>
-              </Card>
+              <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
+                <Card className={classes.card}>
+                  <CardActionArea>
+                    <CardContent>
+                      <Typography gutterBottom variant="h5" component="h2">
+                        {this.props.quizName}
+                      </Typography>
+                      <Typography component="p">
+                        Test your general knowledge
+                      </Typography>
+                    </CardContent>
+                  </CardActionArea>
+                  <CardActions>
+                    <Button variant="contained" color="primary" className={classes.button} onClick={this.props.enterQuiz}>
+                      Start Quiz
+                    </Button>
+                  </CardActions>
+                </Card>
+              </div>
             </div>
           </div>
         )
