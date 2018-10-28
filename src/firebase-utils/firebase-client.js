@@ -81,6 +81,16 @@ export const getQuizQuestion = function(quizId, questionId, callback) {
         console.log("Error: " + error.code);
      });
 };
+
+export const getUsersRemainingInGame = function(quizId, questionId, response, callback){
+    const index = `${tournamentQuizPlayResponseIndex}/${quizId}/${questionId}/${response}`;
+    var userRef = firebase.app().database().ref(index);
+    userRef.on('value', function(snapshot) {
+        callback(snapshot.val());
+    }, function(error){
+        console.log('Error: '+error.code);
+    })
+}
 /**
  * This code is for initiating s 1-1 challenge, the primary user(master) should invoke after getting opponent id.
  * The initial scores of both users will be 0, which should be updated after each answer. listner should be there for updation of score of opponent.
