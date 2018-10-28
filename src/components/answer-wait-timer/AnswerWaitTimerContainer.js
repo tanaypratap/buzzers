@@ -6,10 +6,17 @@ class AnswerWaitTimerContainer extends Component{
     constructor(props){
         super(props);
         this.timerId = 0;
+        this.state = {
+            remUsers: 0
+        }
     }
 
     componentDidMount(){
-        this.timerId =
+        const remUsers = localStorage.getItem('remUsers') || 0;
+        this.setState({
+            remUsers
+        });
+        this.timerId = 
             setTimeout( () => {
                 console.log('Wapas bhej rahe');
                 const id = localStorage.getItem('qId');
@@ -24,7 +31,7 @@ class AnswerWaitTimerContainer extends Component{
     render(){
         return(
             <div>
-                <AnswerWaitTimer waitTime={5}/>
+                <AnswerWaitTimer waitTime={5} remainingUsers={this.state.remUsers}/>
             </div>
         )
     }
