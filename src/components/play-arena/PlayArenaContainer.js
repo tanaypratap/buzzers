@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { getQuizQuestion, userTournamentQuizResponse, checkIfUserAlive, getUsersRemainingInGame, getQuiz } from "./../../firebase-utils/firebase-client";   
+import { getQuizQuestion, userTournamentQuizResponse, checkIfUserAlive, getUsersRemainingInGame, getQuiz } from "./../../firebase-utils/firebase-client";
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { withRouter } from "react-router-dom";
@@ -18,7 +18,19 @@ const styles = theme => ({
     color: 'black',
     backgroundColor: 'white',
     fontSize: '20px',
-    border: '1px solid rgb(255, 255, 255)'
+    border: '1px solid rgb(255, 255, 255)',
+    '&:hover': {
+      backgroundColor: '#8d01ad',
+      borderColor: '#0062cc',
+    },
+    '&:active': {
+      boxShadow: 'none',
+      backgroundColor: '#8d01ad',
+      borderColor: '#005cbf',
+    },
+    '&:focus': {
+      boxShadow: '0 0 0 0.2rem rgba(0,123,255,.5)',
+    },
   },
   paper: {
     padding: theme.spacing.unit,
@@ -89,12 +101,13 @@ class PlayArenaContainer extends Component{
                     currentQuestion
                 }, () => {this.getQuestion()})
             }
+
             this.timerId =
                 setTimeout( () => {
                     if(!this.state.hasAnswered){
                         userTournamentQuizResponse(quizId, this.state.currentQuestion, user.uid, null)
                     }
-                    
+
                     let getRemainingUsersPromise = new Promise( (resolve, reject) => {
                         getUsersRemainingInGame(quizId, this.state.currentQuestion, this.state.question.correctAnswer, (val) =>{
                             localStorage.setItem('remUsers', val);
@@ -112,7 +125,7 @@ class PlayArenaContainer extends Component{
 
                 }, 10000);
         });
-   
+
     }
 
     componentWillUnmount(){
@@ -180,7 +193,7 @@ class PlayArenaContainer extends Component{
             <div className="container" style={{ backgroundColor: '#2f0338', minHeight: '100vh' }}>
 
               <div>
-              
+
               <div className="row" style={{ paddingTop: '5vh' }}>
                 {
                   !this.state.canAnswer &&
@@ -233,9 +246,9 @@ class PlayArenaContainer extends Component{
                       </div>
                     </div>
                 }
-                
+
               </div>
-                
+
                 </div>
 
             </div>
