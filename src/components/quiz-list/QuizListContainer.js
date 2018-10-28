@@ -17,6 +17,7 @@ class QuizListContainer extends React.Component {
 
     componentDidMount() {
         getAllQuiz( (value) => {
+            console.log(value);
             const currentTime = Date.now();
             let upcomingQuizes = {};
             if(value){
