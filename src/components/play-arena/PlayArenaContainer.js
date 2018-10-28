@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { getQuizQuestion } from "../../../firebase-utils/firebase-client";
+import { getQuizQuestion } from "./../../firebase-utils/firebase-client";
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
@@ -16,7 +16,7 @@ const styles = theme => ({
   }
 });
 
-class PlayArena extends Component{
+class PlayArenaContainer extends Component{
     constructor(props){
         super(props);
         this.state = {
@@ -36,8 +36,8 @@ class PlayArena extends Component{
         let question;
         let questionPromise = new Promise( (resolve, reject) => {
             const { quizId } = this.props.match.params;
-            console.log("QuizID: ", quizId);
             const questionId = this.state.currentQuestion;
+            console.log(questionId);
             getQuizQuestion(quizId, questionId, (ques) => {
                 console.log(ques);
                 question = ques;
@@ -67,7 +67,7 @@ class PlayArena extends Component{
             canAnswer: false,
             message,
             currentQuestion: currentQuestion+1,
-        }, this.getQuestion());
+        }, () => {this.getQuestion()});
     }
 
     render(){
@@ -131,8 +131,8 @@ class PlayArena extends Component{
     }
 }
 
-PlayArena.propTypes = {
+PlayArenaContainer.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(PlayArena)
+export default withStyles(styles)(PlayArenaContainer)

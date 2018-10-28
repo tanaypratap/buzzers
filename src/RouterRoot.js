@@ -4,19 +4,19 @@
  */
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import QuizContainer from './components/quiz';
-import QuizQuestionContainer from './components/quiz-question';
+import QuizListContainer from './components/quiz-list/QuizListContainer';
 import App from './components/testapp';
-import PlayArena from './components/quiz/containers/PlayArena';
+import PlayArenaContainer from './components/play-arena/PlayArenaContainer';
+import QuizStartTimerContainer from './components/quiz-start-timer/QuizStartTimerContainer'
 
 function Root(){
     return(
         <Router>
             <Switch>
-                <Route exact path="/" component={QuizContainer} />
+                <Route exact path="/" component={QuizListContainer} />
                 <Route path="/test-app" component={App} />
-                <Route path="/quiz/:quizId" component={PlayArena} />
-                <Route exact path="/questions" component={QuizQuestionContainer} />
+                <Route path="/quiz/:quizId" component={PlayArenaContainer} />
+                <Route exact path="/wait-for-quiz-start" component={QuizStartTimerContainer} />
             </Switch>
         </Router>
     )
