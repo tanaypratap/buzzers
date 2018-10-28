@@ -23,17 +23,11 @@ const styles = theme => ({
   },
   button: {
     margin: theme.spacing.unit,
+    backgroundColor: 'rgb(59, 20, 82)',
   }
 });
 
 class QuizList extends React.Component {
-    constructor(props){
-      super(props);
-      this.state = {
-        button: false
-      }
-    }
-  
     componentDidMount() {
         console.log(this.props.remainingTime);
         if(this.props.remainingTime < 900000){
