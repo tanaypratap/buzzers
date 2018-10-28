@@ -1,7 +1,8 @@
 var questionsObj = {
-  quizName : "Mental Quiz IV",
+  quizName : "Aptitude Quiz IV",
   quizTags : ["Maths"],
   startTime : 1540846800000,
+  questionCount : 5,
   questions : [
     {
       questionNumber: 'Question 16',

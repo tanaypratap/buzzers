@@ -1,7 +1,8 @@
 var questionsObj = {
-    quizName : "GKQuiz I",
+    quizName : "GK Quiz I",
     quizTags : ["GK"],
     startTime : 1540836000000,
+    questionCount : 5,
     questions: [
         {
             questionNumber: 'Question 16',

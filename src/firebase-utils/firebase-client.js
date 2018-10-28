@@ -13,11 +13,25 @@ const tournamentQuizPlayResponseIndex = 'tournamentquizplayresponse'
  * Add a quiz to firebase
  * @param {string} file
  */
-var addQuestionToFirebase = function (file) {
+var addQuestionToFirebase = function (file, inputQuizName, inputStartTime) {
     var quizQuestionText = require(file);
+    var quizName;
+    var startTime;
+    if (inputQuizName === undefined) {
+        quizName = quizQuestionText.quizQuestions.quizName;
+    } else {
+        quizName = inputQuizName;
+    }
+
+    if (inputStartTime === undefined) {
+        startTime = quizQuestionText.quizQuestions.startTime;
+    } else {
+        startTime = inputStartTime;
+    }
+     
     var ref = firebase.app().database().ref('quiz');
-    var quizObj = {"quiz_name" : quizQuestionText.quizQuestions.quizName, "quiz_tag" : quizQuestionText.quizQuestions.quizTags[0],
-    "Start_time" : quizQuestionText.quizQuestions.startTime}
+    var quizObj = {"quiz_name" : quizName, "quiz_tag" : quizQuestionText.quizQuestions.quizTags[0],
+    "Start_time" : startTime, "userCount":0,  "questionCount" : quizQuestionText.quizQuestions.questionCount}
     
     ref.push(quizObj).then((snapshot) => {
         // get the quizId.
@@ -137,8 +151,11 @@ export const addUserToTournamentQuiz = function(quizId, user) {
     var refPath = `${tournamentQuizPlayIndex}/${quizId}/${user}`;
     var tournamentQuizRef = firebase.app().database().ref().child(refPath);
     var userObject = {"score" : 0, "isAlive": true}
-    
-    tournamentQuizRef.set(userObject)
+    tournamentQuizRef.set(userObject);
+    var quizRef = firebase.database().ref(quizIndex).child(quizId).child("userCount");
+    quizRef.transaction(function (response) {
+        return (response || 0) + 1
+    });
 }
 /**
  * Adding the response of the user as Option 1 to 4 for every question. For wrong answer mark user isAlive= false.
@@ -192,6 +209,18 @@ const getResponsesForQuestion = function(quizId, questionId, callback) {
         firebase.database().ref(refPath).once("value", function(snapshot) {
             callback(snapshot.val());
         })
+}
+
+const createDemoQuiz = function(user) {
+    const directoyPath = path.resolve("../../demo-quiz-bank");
+    console.log(directoyPath);
+    fs.readdir(directoyPath,function(err, files) {
+        var filesCount = files.length;
+        var fileIndex = Math.floor(Math.random() * filesCount);
+        console.log(directoyPath + "/" + files[fileIndex]);
+        var startTime = Date.now() + 120000;
+        addQuestionToFirebase(directoyPath + "/" + files[fileIndex], user + " Quiz", startTime);
+    })
 }
 /**
  * gets all the winners
