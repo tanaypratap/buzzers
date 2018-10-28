@@ -251,7 +251,7 @@ export const createDemoQuiz = function (userDisplayName) {
         console.log(quizId);
         var newQuizRef = firebase.app().database().ref('quiz');
         var newQuizObj = {
-            "quiz_name": userDisplayName + " Quiz", "quiz_tag": "DemoQuiz", questionCount: existingQuizobj[quizId].questionCount, userCount: 0,
+            "quiz_name": userDisplayName + "'s" + " Quiz", "quiz_tag": "DemoQuiz", questionCount: existingQuizobj[quizId].questionCount, userCount: 0,
             "Start_time": Date.now() + demoTimeInMillis
         }
         newQuizRef.push(newQuizObj).then((snapshot) => {
