@@ -67,7 +67,6 @@ var addQuestionToFirebase = function (file, inputQuizName, inputStartTime) {
             obj[snapshot.key] = snapshot.val();
             //items.push(obj);
         });
-        debugger;
         callback(obj);
      }, function (error) {
         console.log("Error: " + error.code);
