@@ -55,6 +55,7 @@ class ProtectedRoutes extends React.Component {
           <Route path="/quiz/:quizId" component={PlayArenaContainer} />
           <Route exact path="/wait-for-quiz-start/:quizId" component={QuizStartTimerContainer} />
           <Route path="/scores" component={QuizScoreContainer} />
+          <Route path="/answer-wait-time" component={AnswerWaitTimerContainer} />
         </Switch>
       </Router>;
   }
