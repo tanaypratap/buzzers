@@ -39,7 +39,24 @@ class AnswerWaitTimer extends React.Component {
               <Grid item xs={12}>
                 <Paper className={classes.paper}>
                   <Typography variant="h5" component="h5">
-                    Number of players going ahead in quiz
+                    Correct answer was
+                    <br />
+                    {this.props.correctAnswer}
+                  </Typography>
+                </Paper>
+              </Grid>
+              <br />
+              <Grid item xs={12}>
+                <Paper className={classes.paper}>
+                  <Typography variant="h5" component="h5">
+                    {this.props.status}
+                  </Typography>
+                </Paper>
+              </Grid>
+              <Grid item xs={12}>
+                <Paper className={classes.paper}>
+                  <Typography variant="h5" component="h5">
+                    Number of users going ahead in quiz
                     <br />
                     <Typography variant="h4" component="h3" style={{ color: '#2196f3' }}>
                       {this.props.remainingUsers}
@@ -47,6 +64,7 @@ class AnswerWaitTimer extends React.Component {
                   </Typography>
                 </Paper>
               </Grid>
+
             </div>
           </div>
 
