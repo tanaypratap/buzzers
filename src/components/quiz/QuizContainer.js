@@ -4,26 +4,50 @@
  */
 import React from 'react';
 import QuizLayout from './QuizLayout';
-import { getAllQuiz } from './utils/dbUtils';
+import { getAllQuiz } from '../../firebase-utils/firebase-client';
+import { withRouter } from "react-router-dom";
+
 
 class QuizContainer extends React.Component {
     constructor(props){
         super(props);
-        this.state = {};
+        this.state = {
+            upcomingQuizes: {}
+        };
     }
 
     componentDidMount() {
-        console.log('Needs to be removed')
-        getAllQuiz();
+        getAllQuiz( (value) => {
+            const currentTime = Date.now();
+            let upcomingQuizes = {};
+            if(value){
+                Object.keys(value).map( (id) => {
+                    if(value[id].Start_time > currentTime){                            
+                       upcomingQuizes[id] = value[id]
+                    }
+                })
+                this.setState({
+                    upcomingQuizes
+                })
+            }
+        });       
+    }
+
+    handleStartQuiz(event, id){
+        event.preventDefault();
+        console.log('Here is ', id);
+        this.props.history.push(`/quiz/${id}`)
     }
 
     render() {
+        const quizes = this.state.upcomingQuizes;
         return (
             <div>
-                <QuizLayout quizNumber={23} />
+                 {quizes && Object.keys(quizes)
+                    .map(id => <QuizLayout key={id} quizName={quizes[id].quiz_name} enterQuiz={(event) => {this.handleStartQuiz(event, id)}} />)} 
             </div>
         )
     }
 }
 
-export default QuizContainer
+export default withRouter(QuizContainer);

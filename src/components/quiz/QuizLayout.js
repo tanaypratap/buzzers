@@ -41,7 +41,7 @@ class QuizLayout extends React.Component {
                   <CardActionArea>
                     <CardContent>
                       <Typography gutterBottom variant="h5" component="h2">
-                        General Knowledge
+                        {this.props.quizName}
                       </Typography>
                       <Typography component="p">
                         Test your general knowledge
@@ -49,7 +49,7 @@ class QuizLayout extends React.Component {
                     </CardContent>
                   </CardActionArea>
                   <CardActions>
-                    <Button variant="contained" color="primary" className={classes.button}>
+                    <Button variant="contained" color="primary" className={classes.button} onClick={this.props.enterQuiz}>
                       Start Quiz
                     </Button>
                   </CardActions>
