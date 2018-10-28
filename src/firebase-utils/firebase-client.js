@@ -1,6 +1,4 @@
 var firebase = require('firebase');
-var fs = require( 'fs' );
-const path = require('path');
 
 export const quizIndex = "quiz";
 export const quizQuestionsIndex = "quizquestions";
@@ -64,7 +62,6 @@ var addQuestionToFirebase = function (file, inputQuizName, inputStartTime) {
             obj[snapshot.key] = snapshot.val();
             //items.push(obj);
         });
-        console.log(obj);
         callback(obj);
      }, function (error) {
         console.log("Error: " + error.code);

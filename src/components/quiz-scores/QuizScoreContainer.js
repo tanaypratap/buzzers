@@ -6,9 +6,9 @@ import React from 'react';
 import QuizScore from './QuizScore';
 import { withRouter } from "react-router-dom";
 
-
 class QuizScoreContainer extends React.Component {
-
+    componentDidMount() {
+    }
     render() {
         return (
             <div>
