@@ -20,6 +20,8 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 
 import { firebaseAuth } from './firebase';
+import MenuIcon from '@material-ui/icons/Menu';
+import AnswerWaitTimerContainer from './components/answer-wait-timer/AnswerWaitTimerContainer';
 
 const styles = {
   root: {
