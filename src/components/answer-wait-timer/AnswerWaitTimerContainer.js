@@ -21,7 +21,7 @@ class AnswerWaitTimerContainer extends Component{
                 console.log('Wapas bhej rahe');
                 const id = localStorage.getItem('qId');
                 this.props.history.replace(`/quiz/${id}`);
-            }, 5000)
+            }, 3000)
     }
 
     componentWillUnmount(){

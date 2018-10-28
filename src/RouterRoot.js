@@ -12,6 +12,11 @@ import QuizStartTimerContainer from './components/quiz-start-timer/QuizStartTime
 import QuizScoreContainer from './components/quiz-scores/QuizScoreContainer';
 import Login from './components/login/Login';
 import Logout from "./components/logout/Logout";
+import NotFound from "./components/not-found/NotFound";
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
 import Navbar from "./components/navbar/Navbar";
 
 import { firebaseAuth } from './firebase';
@@ -39,6 +44,7 @@ class ProtectedRoutes extends React.Component {
           <Route exact path="/wait-for-quiz-start/:quizId" component={QuizStartTimerContainer} />
           <Route path="/scores" component={QuizScoreContainer} />
           <Route path="/answer-wait-time" component={AnswerWaitTimerContainer} />
+          <Route component={NotFound} />
         </Switch>
       </Router>;
   }
