@@ -20,12 +20,12 @@ const styles = theme => ({
     fontSize: '20px',
     border: '1px solid rgb(255, 255, 255)',
     '&:hover': {
-      backgroundColor: '#0069d9',
+      backgroundColor: '#8d01ad',
       borderColor: '#0062cc',
     },
     '&:active': {
       boxShadow: 'none',
-      backgroundColor: '#0062cc',
+      backgroundColor: '#8d01ad',
       borderColor: '#005cbf',
     },
     '&:focus': {
