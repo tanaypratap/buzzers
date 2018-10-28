@@ -1,6 +1,9 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { firebaseAuth, googleProvider } from '../../firebase';
+import Button from '@material-ui/core/Button';
+import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
 
 class Login extends React.Component {
     componentDidMount() {
@@ -18,7 +21,7 @@ class Login extends React.Component {
                 const { displayName, photoURL, uid, email } = user;
                 localStorage.setItem('user', JSON.stringify({ displayName, photoURL, uid, email }));
                 this.props.history.push('/');
-            } 
+            }
         })
     }
 
@@ -30,8 +33,16 @@ class Login extends React.Component {
     }
     render() {
         return (<div>
-                    <h1> We need you to login using your Google Account</h1>
-                    <button onClick={this.googleAuth}>Login Using Google</button>
+                  <div className="container">
+                    <div className="row" style={{ padding: '10px', paddingTop: '30%' }}>
+                      <Grid item xs={12}>
+                        <Paper style={{ textAlign: 'center', padding: '20px' }}>
+                          <h1> Please login using your Google Account</h1>
+                          <Button style={{ cursor: 'pointer' }} onClick={this.googleAuth}><img src="/images/btn_google_signin_dark_normal_web.png" alt="logo" /></Button>
+                        </Paper>
+                      </Grid>
+                    </div>
+                  </div>
                 </div>)
      }
 }
