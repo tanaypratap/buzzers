@@ -5,7 +5,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import QuizContainer from './components/quiz';
-import QuizQuestionContainer from './quiz-question';
+import QuizQuestionContainer from './components/quiz-question';
 import App from './components/testapp';
 import PlayArena from './components/quiz/containers/PlayArena';
 
