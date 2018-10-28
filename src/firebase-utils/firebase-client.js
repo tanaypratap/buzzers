@@ -67,7 +67,6 @@ var addQuestionToFirebase = function (file, inputQuizName, inputStartTime) {
             obj[snapshot.key] = snapshot.val();
             //items.push(obj);
         });
-        debugger;
         callback(obj);
      }, function (error) {
         console.log("Error: " + error.code);
@@ -252,7 +251,7 @@ export const createDemoQuiz = function (userDisplayName) {
         console.log(quizId);
         var newQuizRef = firebase.app().database().ref('quiz');
         var newQuizObj = {
-            "quiz_name": userDisplayName + " Quiz", "quiz_tag": "DemoQuiz", questionCount: existingQuizobj[quizId].questionCount, userCount: 0,
+            "quiz_name": userDisplayName + "'s" + " Quiz", "quiz_tag": "DemoQuiz", questionCount: existingQuizobj[quizId].questionCount, userCount: 0,
             "Start_time": Date.now() + demoTimeInMillis
         }
         newQuizRef.push(newQuizObj).then((snapshot) => {
