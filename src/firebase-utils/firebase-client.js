@@ -8,7 +8,7 @@ export const tournamentQuizPlayIndex = "tournamentquizplay";
 export const tournamentQuizPlayResponseIndex = 'tournamentquizplayresponse'
 const userIndex = "users";
 
-const demoTimeInMillis = 120000
+const demoTimeInMillis = 12000
 
 /**
  * Add a quiz to firebase
@@ -192,7 +192,7 @@ export const quizChallengeResponse = function(quizPlayId, questionId, user, resp
             if(!val){
                 rej(val);
             }
-            else{
+            else{ 
                 res(val);
             }
         });  
@@ -203,9 +203,11 @@ export const quizChallengeResponse = function(quizPlayId, questionId, user, resp
         var correctAnswerRef = `${quizQuestionsIndex}/${quizId}/${questionId}/correctAnswer`;
         firebase.database().ref().child(correctAnswerRef).once("value", function (snapshot) {
             var correctAnswer = snapshot.val();
-            if (userResponse === correctAnswer) {
+            if (userResponse && userResponse === correctAnswer) {
+                console.log('if');
                 firebase.database().ref(tournamentQuizPlayIndex).child(quizId).child(user.uid).child("score").set(questionId);
             } else {
+                console.log('else');
                 var quizUserRef = `${tournamentQuizPlayIndex}/${quizId}/${user.uid}/isAlive`;
                 firebase.app().database().ref(quizUserRef).set(false);
             }
@@ -221,6 +223,8 @@ export const quizChallengeResponse = function(quizPlayId, questionId, user, resp
     }).catch((val) => { console.log('Error: ', val)});
 
 }
+
+
 
  export const checkIfUserAlive = function(quizId, user, callback) {
     var refPath = `${tournamentQuizPlayIndex}/${quizId}/${user.uid}/isAlive`
