@@ -18,6 +18,7 @@ class QuizListContainer extends React.Component {
     }
 
     componentDidMount() {
+        localStorage.removeItem('id');
         getAllQuiz( (value) => {
             const currentTime = Date.now();
             let upcomingQuizesObject = {};
