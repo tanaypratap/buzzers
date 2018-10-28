@@ -18,18 +18,15 @@ class QuizStartTimerContainer extends React.Component {
         getQuiz(quizId, (val) => {
             const remainingTime = moment(val.Start_time).fromNow();
             const remainingTimeInMilliSeconds = val.Start_time - Date.now();
-            console.log(remainingTimeInMilliSeconds);
-            console.log(remainingTime);
             this.setState({
                 remainingTime
             }, () => {
-                this.timerId = setTimeout( () => { console.log('Khulega'); this.props.history.replace(`/quiz/${quizId}`) }, remainingTimeInMilliSeconds)
+                this.timerId = setTimeout( () => { this.props.history.replace(`/quiz/${quizId}`) }, remainingTimeInMilliSeconds)
             });
         });
     }
 
     componentWillUnmount(){
-        console.log('Unmounting');
         clearTimeout(this.timerId);
     }
 
