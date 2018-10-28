@@ -25,7 +25,7 @@ class QuizStartTimer extends React.Component {
         const { classes } = this.props;
         return (
           <div className="container">
-            <div className="row" style={{ padding: '20px', paddingTop: '15%' }}>
+            <div className="row" style={{ padding: '20px', paddingTop: '10%' }}>
               <Grid item xs={12}>
                 <Paper className={classes.paper}>
                   <Typography variant="h4" component="h3" style={{ color: '#ffffff', paddingTop: '15%' }}>
