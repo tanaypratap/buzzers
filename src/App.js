@@ -18,7 +18,6 @@ class App extends Component {
     return (
       <div className="App">
         <button onClick={this.props.sendTheAlert}>Click</button>
-        <QuizQuestion></QuizQuestion>
       </div>
     );
   }
