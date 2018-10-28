@@ -41,11 +41,12 @@ var addQuestionToFirebase = function (file) {
 export const getAllQuiz = function(callback) {
     let allQuiz = null;
     var currentTime = Date.now();
+    var items = [];
     var quizRef = firebase.app().database().ref(quizIndex).orderByChild('Start_time').startAt(currentTime);
     // var quizRef = firebase.app().database().ref(quizIndex);
-    quizRef.on("value", function(snapshot) {
+    quizRef.on("value", function(snapshots) {
         items = [];
-        snapshots.forEach(snapshot => {l
+        snapshots.forEach(snapshot => {
           items.push(snapshot.val());
         });
         allQuiz = items;
