@@ -21,6 +21,7 @@ const styles = theme => ({
   },
   button: {
     margin: theme.spacing.unit,
+    backgroundColor: 'rgb(59, 20, 82)',
   }
 });
 
