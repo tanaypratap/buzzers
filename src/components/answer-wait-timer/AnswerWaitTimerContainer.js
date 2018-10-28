@@ -22,11 +22,12 @@ class AnswerWaitTimerContainer extends Component{
                 console.log('Wapas bhej rahe');
                 const id = localStorage.getItem('qId');
                 this.props.history.replace(`/quiz/${id}`);
-            }, 5000)
+            }, 3000)
         
         this.runningTimer = setInterval(() => {
             this.setState({ waitTime: this.state.waitTime - 1})
         }, 1000)
+
     }
 
     componentWillUnmount(){
