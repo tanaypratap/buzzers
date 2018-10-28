@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { getQuizQuestion, userTournamentQuizResponse, checkIfUserAlive } from "./../../firebase-utils/firebase-client";
+import { getQuizQuestion, userTournamentQuizResponse, checkIfUserAlive, getUsersRemainingInGame } from "./../../firebase-utils/firebase-client";
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { withRouter } from "react-router-dom";
@@ -96,15 +96,23 @@ class PlayArenaContainer extends Component{
                     if(!this.state.hasAnswered){
                         userTournamentQuizResponse(quizId, this.state.currentQuestion, 'jatin', null)
                     }
-                    console.log('Bhej rhe');
-                    const nextQuestion = this.state.currentQuestion+1;
-                    console.log('Next Question: ', nextQuestion);
-                    localStorage.setItem('id', nextQuestion);
-                    this.props.history.push(`/answer-wait-time`);
+                    let getRemainingUsersPromise = new Promise( (resolve, reject) => {
+                        getUsersRemainingInGame(quizId, this.state.currentQuestion, this.state.question.correctAnswer, (val) =>{
+                            localStorage.setItem('remUsers', val);
+                            resolve();
+                        })
+                    })
+
+                    getRemainingUsersPromise.then( () => {
+                        console.log('Bhej rhe');
+                        const nextQuestion = this.state.currentQuestion+1;
+                        console.log('Next Question: ', nextQuestion);
+                        localStorage.setItem('id', nextQuestion);
+                        this.props.history.push(`/answer-wait-time`);
+                    })
+
                 }, 10000);
         });
-
-
 
     }
 
