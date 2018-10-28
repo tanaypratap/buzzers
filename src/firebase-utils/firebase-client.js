@@ -11,7 +11,7 @@ const tournamentQuizPlayResponseIndex = 'tournamentquizplayresponse'
 
 /**
  * Add a quiz to firebase
- * @param {string} file 
+ * @param {string} file
  */
 var addQuestionToFirebase = function (file) {
     var quizQuestionText = require(file);
@@ -21,7 +21,7 @@ var addQuestionToFirebase = function (file) {
     
     ref.push(quizObj).then((snapshot) => {
         // get the quizId.
-        const quizId = snapshot.key 
+        const quizId = snapshot.key
         var quizQuestionRef = firebase.app().database().ref('quizquestions');
         var quizQuestions = quizQuestionText.quizQuestions.questions;
         for (var i=0;i<quizQuestions.length;i++) {
@@ -42,22 +42,31 @@ var addQuestionToFirebase = function (file) {
 export const getAllQuiz = function(callback) {
     let allQuiz = null;
     var currentTime = Date.now();
+    var obj = {};
     var quizRef = firebase.app().database().ref(quizIndex).orderByChild('Start_time').startAt(currentTime);
     // var quizRef = firebase.app().database().ref(quizIndex);
-    quizRef.on("value", function(snapshot) {
-        items = [];
-        snapshots.forEach(snapshot => {l
-          items.push(snapshot.val());
+    quizRef.on("value", function(snapshots) {
+        snapshots.forEach(snapshot => {
+            obj[snapshot.key] = snapshot.val();
+            //items.push(obj);
         });
-        allQuiz = items;
-        callback(allQuiz);
+        console.log(obj);
+        callback(obj);
      }, function (error) {
         console.log("Error: " + error.code);
      });
 };
 
+export const getQuiz = function(quizId, callback) {
+    let quizRef = firebase.app().database().ref(`${quizIndex}/${quizId}`);
+    quizRef.on("value", function(snapshot) {
+        callback(snapshot.val());
+    }, function(error) {
+        console.log('Error: '+ error.code);
+    })
+}
 /**
- * 
+ *
  * @param {*} quizId the id of the quiz
  * @param {*} questionId question id to be retrieved.
  */
@@ -92,7 +101,7 @@ const startQuizChallenge = function(quizId, player1, player2) {
         quizPlayId = snapshot.key;
         return quizPlayId;
     });
-    
+
 }
 /**
  * Index for 1-1 challenge response of each user.
@@ -101,7 +110,7 @@ const startQuizChallenge = function(quizId, player1, player2) {
  * @param {*} user user alias who responded.
  * @param {*} response response given by the user
  * @param {*} isCorrect was the user answer correct boolean
- * @param {*} currentScore 
+ * @param {*} currentScore
  */
 const quizChallengeResponse = function(quizPlayId, questionId, user, response, isCorrect, currentScore) {
     var challengeQuizPlayRepsonseRef = firebase.app().database().ref(challengeQuizPlayResponseIndex + '/' + quizPlayId + '/' +user + '/'+ questionId);
@@ -112,7 +121,7 @@ const quizChallengeResponse = function(quizPlayId, questionId, user, response, i
     var responseObj ={}
     responseObj[quizPlayId] = userObj*/
     var responseObj = {"userResponse" : response, "isResponseCorrect": isCorrect };
-    
+
     //var response = {"userResponse" : response, "isResponseCorrect": isCorrect };
     challengeQuizPlayRepsonseRef.set(responseObj);
     // update the score here for the user.
@@ -121,10 +130,10 @@ const quizChallengeResponse = function(quizPlayId, questionId, user, response, i
 }
 /**
  * Adding the user to teh tournament with isAlive = true, on any one queston isAlive becomes false and user can't continue.
- * @param {*} quizId 
- * @param {*} user 
+ * @param {*} quizId
+ * @param {*} user
  */
-const addUserToTournamentQuiz = function(quizId, user) {
+export const addUserToTournamentQuiz = function(quizId, user) {
     var refPath = `${tournamentQuizPlayIndex}/${quizId}/${user}`;
     var tournamentQuizRef = firebase.app().database().ref().child(refPath);
     var userObject = {"score" : 0, "isAlive": true}
@@ -133,11 +142,11 @@ const addUserToTournamentQuiz = function(quizId, user) {
 }
 /**
  * Adding the response of the user as Option 1 to 4 for every question. For wrong answer mark user isAlive= false.
- * @param {*} quizId 
- * @param {*} questionId 
- * @param {*} userResponse 
+ * @param {*} quizId
+ * @param {*} questionId
+ * @param {*} userResponse
  */
-const userTournamentQuizResponse = function (quizId, questionId, user, userResponse) {
+export const userTournamentQuizResponse= function(quizId, questionId, user, userResponse) {
     // check if user is alive
     if (!checkIfUserAlive(quizId, user).then(val => { return val }).catch(val => { return val })) {
         console.log("Error recieved");
@@ -166,7 +175,7 @@ const userTournamentQuizResponse = function (quizId, questionId, user, userRespo
 const checkIfUserAlive = function(quizId, user) {
     return new Promise((resolve, reject) =>{
         var refPath = `${tournamentQuizPlayIndex}/${quizId}/${user}/isAlive`
-        
+
         firebase.database().ref(refPath).once("value", function(snapshot) {
             if (snapshot.val() === false) {
                 console.log(user + " is Malicious User should be blocked");
@@ -185,7 +194,7 @@ const getResponsesForQuestion = function(quizId, questionId, callback) {
         })
 }
 /**
- * gets all the quiz
+ * gets all the winners
  * @param {*} quizId 
  * @param {*} callback 
  */
