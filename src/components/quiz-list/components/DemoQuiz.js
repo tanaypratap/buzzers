@@ -40,8 +40,8 @@ const DemoQuiz = ({ classes, startDemoQuiz }) => (
                 Start Your Own Quiz
               </Typography>
               <Typography component="p">
-                Once you click on start, this will begin a new quiz in 2
-                minutes
+                Once you click on start, this will begin a new quiz in 30
+                seconds
               </Typography>
             </CardContent>
           </CardActionArea>
