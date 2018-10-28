@@ -76,6 +76,7 @@ class PlayArenaContainer extends Component{
             checkIfUserAlive( quizId, user, (val) => {
                 console.log('Here');
                 if(!val){
+                    console.log('Nhi hai zinda');
                     this.setState({
                         userOut: true,
                         canAnswer: false
