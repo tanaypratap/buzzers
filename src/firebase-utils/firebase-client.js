@@ -8,8 +8,6 @@ export const tournamentQuizPlayIndex = "tournamentquizplay";
 export const tournamentQuizPlayResponseIndex = 'tournamentquizplayresponse'
 const userIndex = "users";
 
-const path = require('path');
-const fs = require('fs');
 const demoTimeInMillis = 120000
 
 /**
@@ -255,7 +253,7 @@ export const createDemoQuiz = function (userDisplayName) {
         var newQuizRef = firebase.app().database().ref('quiz');
         var newQuizObj = {
             "quiz_name": userDisplayName + " Quiz", "quiz_tag": "DemoQuiz", questionCount: existingQuizobj[quizId].questionCount, userCount: 0,
-            "Start_time": Date.now() + 120000
+            "Start_time": Date.now() + demoTimeInMillis
         }
         newQuizRef.push(newQuizObj).then((snapshot) => {
             // get the quizId.
