@@ -54,6 +54,7 @@ class QuizScore extends React.Component {
 
                   <div className={classes.root}>
                     {
+                      this.props.winnersList &&
                       Object.keys(this.props.winnersList).map(eachWinner =>
                       <List key={this.props.winnersList[eachWinner]}>
                         <ListItem>
