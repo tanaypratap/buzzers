@@ -4,9 +4,8 @@
  */
 import React from 'react';
 import QuizList from './QuizList';
-import { getAllQuiz } from '../../firebase-utils/firebase-client';
+import { getAllQuiz, addUserToTournamentQuiz } from '../../firebase-utils/firebase-client';
 import { withRouter } from "react-router-dom";
-
 
 class QuizListContainer extends React.Component {
     constructor(props){
@@ -36,7 +35,9 @@ class QuizListContainer extends React.Component {
     handleStartQuiz(event, id){
         event.preventDefault();
         console.log('Here is ', id);
-        this.props.history.push(`/quiz/${id}`)
+        console.log(this.state.upcomingQuizes[id]);
+        addUserToTournamentQuiz(id, 'shahrukh');
+        this.props.history.push(`/wait-for-quiz-start/${id}`)
     }
 
     render() {
@@ -44,7 +45,11 @@ class QuizListContainer extends React.Component {
         return (
             <div>
                  {quizes && Object.keys(quizes)
-                    .map(id => <QuizList key={id} quizName={quizes[id].quiz_name} startTime={quizes[id].Start_time} enterQuiz={(event) => {this.handleStartQuiz(event, id)}} />)}
+                    .map(id => <QuizList key={id} 
+                                    quizName={quizes[id].quiz_name}
+                                    startTime={quizes[id].Start_time} 
+                                    enterQuiz={(event) => {this.handleStartQuiz(event, id)}}
+                                    remainingTime={quizes[id].Start_time-Date.now()} />)}
             </div>
         )
     }

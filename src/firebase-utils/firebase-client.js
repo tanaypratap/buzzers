@@ -49,6 +49,14 @@ export const getAllQuiz = function(callback) {
      });
 };
 
+export const getQuiz = function(quizId, callback) {
+    let quizRef = firebase.app().database().ref(`${quizIndex}/${quizId}`);
+    quizRef.on("value", function(snapshot) {
+        callback(snapshot.val());
+    }, function(error) {
+        console.log('Error: '+ error.code);
+    })
+}
 /**
  * 
  * @param {*} quizId the id of the quiz
@@ -117,7 +125,7 @@ const quizChallengeResponse = function(quizPlayId, questionId, user, response, i
  * @param {*} quizId 
  * @param {*} user 
  */
-const addUserToTournamentQuiz = function(quizId, user) {
+export const addUserToTournamentQuiz = function(quizId, user) {
     var refPath = `${tournamentQuizPlayIndex}/${quizId}/${user}`;
     var tournamentQuizRef = firebase.app().database().ref().child(refPath);
     var userObject = {"isAlive" : true}
@@ -129,7 +137,7 @@ const addUserToTournamentQuiz = function(quizId, user) {
  * @param {*} questionId 
  * @param {*} userResponse 
  */
-const userTournamentQuizResponse= function(quizId, questionId,user, userResponse) {
+export const userTournamentQuizResponse= function(quizId, questionId, user, userResponse) {
     // check if user is alive
     if(!checkIfUserAlive(quizId,user).then(val => {return val}).catch(val =>{return val})) {
         console.log("Error recieved");
