@@ -35,7 +35,7 @@ class PlayArenaContainer extends Component{
         const currentQuestion = parseInt(localStorage.getItem('id')) || 1;
         if(currentQuestion === this.state.totalQuestions){
             localStorage.clear();
-            this.props.history.push('/score');
+            this.props.history.push('/scores');
         }
         if(currentQuestion === 1){
             this.getQuestion();
