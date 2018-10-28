@@ -1,0 +1,15 @@
+
+#btn :hover {
+  background-color: #d78ddc;
+}
+
+#btn:disabled,
+#btn[disabled] {
+  border: 1px solid #999999;
+  background-color: #d78ddc;
+  color: #666666;
+}
+
+.buttonSelected {
+    background-color: #d78ddc,
+  }
