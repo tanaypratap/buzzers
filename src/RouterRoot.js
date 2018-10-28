@@ -10,6 +10,7 @@ import QuizListContainer from './components/quiz-list/QuizListContainer';
 import App from './components/testapp';
 import PlayArenaContainer from './components/play-arena/PlayArenaContainer';
 import QuizStartTimerContainer from './components/quiz-start-timer/QuizStartTimerContainer'
+import QuizScoreContainer from './components/quiz-scores/QuizScoreContainer'
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -55,6 +56,7 @@ function Root(props){
                   <Route path="/quiz/:quizId" component={PlayArenaContainer} />
                   <Route path="/wait-for-quiz-start/:quizId" component={QuizStartTimerContainer} />
                   <Route path="/answer-wait-time" component={AnswerWaitTimerContainer} />
+                  <Route path="/scores" component={QuizScoreContainer} />
               </Switch>
             </div>
         </Router>
