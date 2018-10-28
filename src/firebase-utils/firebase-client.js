@@ -7,6 +7,9 @@ export const challengeQuizPlayResponseIndex = 'challengequizplayresponse'
 export const tournamentQuizPlayIndex = "tournamentquizplay";
 export const tournamentQuizPlayResponseIndex = 'tournamentquizplayresponse'
 
+const path = require('path');
+const fs = require('fs');
+
 /**
  * Add a quiz to firebase
  * @param {string} file
