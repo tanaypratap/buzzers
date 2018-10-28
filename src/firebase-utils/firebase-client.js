@@ -177,23 +177,31 @@ const checkIfUserAlive = function(quizId, user) {
     });
 }
 
-const getResponsesForQuestion = function(quizId, questionId) {
+const getResponsesForQuestion = function(quizId, questionId, callback) {
     var refPath = `${tournamentQuizPlayResponseIndex}/${quizId}/${questionId}`
-        
+        firebase.database().ref(refPath).once("value", function(snapshot) {
+            callback(snapshot.val());
+        })
+}
+
+const getWinnersForTournamentQuiz = function(quizId, callback) {
+    var refPath = `${tournamentQuizPlayIndex}/${quizId}`
+        firebase.database().ref(refPath).orderByChild("score").startAt(1).limitToLast(1).once("value", function(snapshot) {
+            var keys = Object.keys(snapshot.val());
+            var score = snapshot.val()[keys[0]]["score"]
+            firebase.database().ref(refPath).orderByChild("score").equalTo(score).on("value", function(snapshot) {
+                callback(snapshot.val());
+            })
+        })
+}
+
+const getFinalUserScore = function(quizId,user, callback) {
+    var refPath = `${tournamentQuizPlayIndex}/${quizId}/${user}/"score"`;
         firebase.database().ref(refPath).once("value", function(snapshot) {
             console.log(snapshot.val());
+            callback(snapshot.val());
         })
 }
-
-const getWinnersForTournamentQuiz = function(quizId) {
-    var refPath = `${tournamentQuizPlayIndex}/${quizId}`
-        
-        firebase.database().ref(refPath).orderByChild("isAlive").equalTo(true).once("value", function(snapshot) {
-            console.log(snapshot.val());
-        })
-}
-
-
 
 // config for firebase
 const config = {
