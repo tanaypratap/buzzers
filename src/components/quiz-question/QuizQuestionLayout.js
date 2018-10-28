@@ -17,9 +17,10 @@ import Typography from '@material-ui/core/Typography';
 const styles = theme => ({
   button: {
     margin: theme.spacing.unit,
-    padding: '20px',
+    padding: '30px',
     width: '100%',
     color: 'black',
+    fontSize: '20px',
     backgroundColor: 'white',
   }
 });
