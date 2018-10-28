@@ -213,25 +213,25 @@ class PlayArenaContainer extends Component{
                             {this.state.question.questionText}
                           </Typography>
                         </div>
-                        <Button variant="outlined" className={classes.button} type="button"
+                        <Button id="#btn" variant="outlined" className={classes.button} type="button"
                             onClick={ (event) => this.handleClick(event, this.state.question.option1)}
                             disabled={!this.state.canAnswer || this.state.userOut}>
                             {this.state.question.option1}
                         </Button>
                         <br /><br />
-                        <Button variant="outlined" className={classes.button} type="button"
+                        <Button id="#btn" variant="outlined" className={classes.button} type="button"
                             onClick={ (event) => this.handleClick(event, this.state.question.option2)}
                             disabled={!this.state.canAnswer || this.state.userOut}>
                             {this.state.question.option2}
                         </Button>
                         <br /><br />
-                        <Button variant="outlined" className={classes.button} type="button"
+                        <Button id="#btn" variant="outlined" className={classes.button} type="button"
                             onClick={ (event) => this.handleClick(event, this.state.question.option3)}
                             disabled={!this.state.canAnswer || this.state.userOut}>
                             {this.state.question.option3}
                         </Button>
                         <br /><br />
-                        <Button variant="outlined" className={classes.button} type="button"
+                        <Button id="#btn" variant="outlined" className={classes.button} type="button"
                             onClick={ (event) => this.handleClick(event, this.state.question.option4)}
                             disabled={!this.state.canAnswer || this.state.userOut}>
                             {this.state.question.option4}
