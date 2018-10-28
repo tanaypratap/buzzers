@@ -34,9 +34,8 @@ class QuizList extends React.Component {
         button: false
       }
     }
-    
+
     componentDidMount() {
-        console.log(this.props.remainingTime);
         if(this.props.remainingTime < 900000){
           this.setState({
             button: true
@@ -46,7 +45,7 @@ class QuizList extends React.Component {
 
     render() {
       const { classes } = this.props;
-      console.log(this.props.classes);
+      // console.log(this.props.classes);
         return (
           <div className="container">
             <div className="row" style={{ paddingTop: '5vh' }}>
