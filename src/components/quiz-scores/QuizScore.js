@@ -2,6 +2,8 @@ import React from 'react'
 import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -14,9 +16,16 @@ import BeachAccessIcon from '@material-ui/icons/BeachAccess';
 const styles = theme => ({
   root: {
     width: '100%',
-    maxWidth: 360,
-    backgroundColor: theme.palette.background.paper,
+    flexGrow: 1,
   },
+  paper: {
+    padding: theme.spacing.unit,
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+  },
+  primary: {
+    fontSize: '18px'
+  }
 });
 
 class QuizScore extends React.Component {
@@ -25,31 +34,42 @@ class QuizScore extends React.Component {
         return (
           <div className="container">
             <div className="row" style={{ padding: '20px', paddingTop: '5vh' }}>
-              <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', alignItems: 'center' }}>
-                <Typography gutterBottom variant="h5" component="h2" style={{ justifyContent: 'center', alignItems: 'center' }}>
-                  Number of questions you answered:
-                  <br /> {this.props.numberofQuestionsAnswered}
-                </Typography>
-              </div>
-              <div className={classes.root}>
-              <ListItem>
-                <Card style={{ width: '100%', padding: '5px' }}>
-                <h2>Winners</h2>
-                </Card>
-              </ListItem>
-              {
-                this.props.winnersList.map(eachWinner =>
-                <List>
-                  <ListItem>
-                    <Avatar>
-                      <ImageIcon />
-                    </Avatar>
-                    <ListItemText primary={eachWinner} />
-                  </ListItem>
-                </List>
-                )
-              }
-              </div>
+              <Grid item xs={12}>
+                <Paper className={classes.paper}>
+                  <Typography variant="h5" component="h5">
+                    Number of questions you answered
+                    <br />
+                    <span style={{ fontSize: '70px', color: '#2196f3' }}>{this.props.numberofQuestionsAnswered}</span>
+                  </Typography>
+                </Paper>
+              </Grid>
+              <br />
+              <Grid item xs={12}>
+                <Paper className={classes.paper}>
+                  <Grid item xs={12}>
+                    <Paper className={classes.paper} style={{ backgroundColor: '#efc246' }}>
+                      <ListItem>
+                        <h2 style={{ color: 'rgb(70, 50, 1)' }}>Winner Board</h2>
+                      </ListItem>
+                    </Paper>
+                  </Grid>
+
+                  <div className={classes.root}>
+                    {
+                      this.props.winnersList.map(eachWinner =>
+                      <List key={eachWinner}>
+                        <ListItem>
+                          <Avatar>
+                            <ImageIcon />
+                          </Avatar>
+                          <ListItemText primary={eachWinner} className={classes.primary}/>
+                        </ListItem>
+                      </List>
+                      )
+                    }
+                  </div>
+                </Paper>
+              </Grid>
             </div>
           </div>
         )
