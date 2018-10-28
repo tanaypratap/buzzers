@@ -17,8 +17,8 @@ class AnswerWaitTimerContainer extends Component{
         this.setState({
             remUsers
         });
-        this.timerId = 
-            setTimeout(() => {
+        this.timerId =
+            setTimeout( () => {
                 console.log('Wapas bhej rahe');
                 const id = localStorage.getItem('qId');
                 this.props.history.replace(`/quiz/${id}`);
