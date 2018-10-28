@@ -88,7 +88,7 @@ class PlayArenaContainer extends Component{
             const currentQuestion = parseInt(localStorage.getItem('id')) || 1;
 
             let gettingQuesPromise = new Promise( (resolve, reject) => {
-                if(currentQuestion === this.state.totalQuestions){
+                if(currentQuestion === this.state.totalQuestions+1){
                     this.props.history.push('/scores');
                     return;
                 }
