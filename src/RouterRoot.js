@@ -9,14 +9,13 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import QuizListContainer from './components/quiz-list/QuizListContainer';
 import App from './components/testapp';
 import PlayArenaContainer from './components/play-arena/PlayArenaContainer';
-import QuizStartTimerContainer from './components/quiz-start-timer/QuizStartTimerContainer'
-import QuizScoreContainer from './components/quiz-scores/QuizScoreContainer'
+import QuizStartTimerContainer from './components/quiz-start-timer/QuizStartTimerContainer';
+import QuizScoreContainer from './components/quiz-scores/QuizScoreContainer';
+import Login from './components/login/Login';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 
 const styles = {
   root: {
@@ -55,6 +54,7 @@ function Root(props){
                   <Route path="/quiz/:quizId" component={PlayArenaContainer} />
                   <Route exact path="/wait-for-quiz-start/:quizId" component={QuizStartTimerContainer} />
                   <Route path="/scores" component={QuizScoreContainer} />
+                  <Route path="/login" component={Login} />
               </Switch>
             </div>
         </Router>
