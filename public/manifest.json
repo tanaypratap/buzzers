@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Buzzers",
+  "name": "Buzzers",
   "icons": [
     {
       "src": "/images/buzzers.png",
@@ -20,6 +20,6 @@
   ],
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#2e1c6a",
-  "theme_color": "#2e1c6a"
+  "background_color": "#3b1452",
+  "theme_color": "#3b1452"
 }
