@@ -48,7 +48,6 @@ class PlayArenaContainer extends Component{
             question: null,
             canAnswer: true,
             hasAnswered: false,
-            message: "",
             gameOver: false,
             totalQuestions: 100,
             userOut: false,
@@ -67,14 +66,12 @@ class PlayArenaContainer extends Component{
             });
 
             getQuiz( quizId, (val) => {
-                console.log('TQ: ', val);
                 this.setState({
                     totalQuestions: val.questionCount
                 })
             })
 
             checkIfUserAlive( quizId, user, (val) => {
-                console.log('Here');
                 if(!val){
                     this.setState({
                         userOut: true,
@@ -116,21 +113,33 @@ class PlayArenaContainer extends Component{
                 this.timerId =
                 setTimeout( () => {
                     if(!this.state.hasAnswered){
-                        userTournamentQuizResponse(quizId, this.state.currentQuestion, user.uid, null)
+                        userTournamentQuizResponse(quizId, this.state.currentQuestion, user, null)
                     }
 
                     let getRemainingUsersPromise = new Promise( (resolve, reject) => {
                         getUsersRemainingInGame(quizId, this.state.currentQuestion, this.state.question.correctAnswer, (val) =>{
+                            if(val === null) val = 0;
                             localStorage.setItem('remUsers', val);
                             resolve();
                         })
                     })
 
                     getRemainingUsersPromise.then( () => {
-                        console.log('Bhej rhe');
                         const nextQuestion = this.state.currentQuestion+1;
-                        console.log('Next Question: ', nextQuestion);
                         localStorage.setItem('id', nextQuestion);
+                        localStorage.setItem('answer', this.state.question.correctAnswer);
+                        if(!this.state.hasAnswered && !this.state.userOut){
+                            localStorage.setItem('status', 'No answer received. You are out of the game');
+                        }
+                        else if(this.state.hasAnswered && this.state.userOut){
+                            localStorage.setItem('status','Incorrect answer. You are out');
+                        }
+                        else if(this.state.hasAnswered && !this.state.userOut){
+                            localStorage.setItem('status','Correct answer. Next question coming up');
+                        }
+                        else{
+                            localStorage.setItem('status','You are already out of the game');
+                        }
                         this.props.history.push(`/answer-wait-time`);
                     })
 
@@ -151,9 +160,7 @@ class PlayArenaContainer extends Component{
         let firebasePromise = new Promise( (resolve, reject) => {
             const { quizId } = this.props.match.params;
             const questionId = this.state.currentQuestion;
-            console.log(questionId);
             getQuizQuestion(quizId, questionId, (ques) => {
-                console.log(ques);
                 question = ques;
                 resolve();
             });
@@ -165,7 +172,7 @@ class PlayArenaContainer extends Component{
                 this.setState({
                     question,
                     canAnswer: true,
-                    message: ""
+ 
                 }, () => {resolve();});
                 
      
@@ -177,26 +184,17 @@ class PlayArenaContainer extends Component{
     handleClick(event, answer){
         event.preventDefault();
         const user = JSON.parse(localStorage.getItem('user'));
-        this.setState({
-            hasAnswered: true
-        })
-        let message= "";
-        (answer === this.state.question.correctAnswer)?
-            message="Correct":
-            message="Incorrect";
-        const { quizId } = this.props.match.params;
-        userTournamentQuizResponse(quizId, this.state.currentQuestion, user, answer);
-        if(message === "Incorrect"){
+        if(answer !== this.state.question.correctAnswer){
             this.setState({
-                gameOver: true
+                userOut: true
             })
         }
-        else{
-            this.setState({
-                canAnswer: false,
-                message,
-            });
-        }
+        const { quizId } = this.props.match.params;
+        this.setState({
+            canAnswer: false,
+            hasAnswered: true
+        })
+        userTournamentQuizResponse(quizId, this.state.currentQuestion, user, answer);
     }
 
     render(){
@@ -238,13 +236,9 @@ class PlayArenaContainer extends Component{
                         </Button>
                     </div>
                 }
-
-              </div>
-
+                    </div>
                 </div>
-
             </div>
-
         )
     }
 }

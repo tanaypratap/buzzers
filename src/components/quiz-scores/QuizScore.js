@@ -27,7 +27,6 @@ const styles = theme => ({
 class QuizScore extends React.Component {
     render() {
         const { classes } = this.props;
-        console.log('winners', this.props.winnersList);
         return (
           <div className="container">
             <div className="row" style={{ padding: '20px', paddingTop: '5vh' }}>
