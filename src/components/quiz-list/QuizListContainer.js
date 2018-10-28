@@ -37,7 +37,8 @@ class QuizListContainer extends React.Component {
         event.preventDefault();
         console.log('Here is ', id);
         console.log(this.state.upcomingQuizes[id]);
-        addUserToTournamentQuiz(id, 'shahrukh');
+        const user = localStorage.getItem('user');
+        addUserToTournamentQuiz(id, user);
         this.props.history.push(`/wait-for-quiz-start/${id}`)
     }
 
