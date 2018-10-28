@@ -161,14 +161,14 @@ class PlayArenaContainer extends Component{
 
         let questionPromise = new Promise( (resolve, reject) => {
             firebasePromise.then( (val) => {
-                
+
                 this.setState({
                     question,
                     canAnswer: true,
                     message: ""
                 }, () => {resolve();});
-                
-     
+
+
             });
         });
 
@@ -204,33 +204,37 @@ class PlayArenaContainer extends Component{
         return(
             <div className="container" style={{ backgroundColor: '#2f0338', minHeight: '100vh' }}>
               <div>
-              <div className="row" style={{ paddingTop: '5vh' }}>
+              <div className="row" style={{ paddingTop: '3vh' }}>
                 {this.state.question &&
                     <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
-                        <p style={{ color: 'white' }}>{this.state.waitTime}</p>
+                        <Typography gutterBottom variant="h5" component="h4" style={{ color: 'white' }}>
+                          Remaining Time: {this.state.waitTime}s
+                        </Typography>
+                        <br />
                         <div style={{ minHeight: '100px', display: 'flex', justifyContent: 'center', flexWrap: 'wrap', alignItems: 'center', padding: '15px'  }}>
                           <Typography gutterBottom variant="h5" component="h1" style={{ color: 'white' }}>
                             {this.state.question.questionText}
                           </Typography>
                         </div>
+                        <br />
                         <Button id="#btn" variant="outlined" className={classes.button} type="button"
                             onClick={ (event) => this.handleClick(event, this.state.question.option1)}
                             disabled={!this.state.canAnswer || this.state.userOut}>
                             {this.state.question.option1}
                         </Button>
-                        <br /><br />
+                        <br />
                         <Button id="#btn" variant="outlined" className={classes.button} type="button"
                             onClick={ (event) => this.handleClick(event, this.state.question.option2)}
                             disabled={!this.state.canAnswer || this.state.userOut}>
                             {this.state.question.option2}
                         </Button>
-                        <br /><br />
+                        <br />
                         <Button id="#btn" variant="outlined" className={classes.button} type="button"
                             onClick={ (event) => this.handleClick(event, this.state.question.option3)}
                             disabled={!this.state.canAnswer || this.state.userOut}>
                             {this.state.question.option3}
                         </Button>
-                        <br /><br />
+                        <br />
                         <Button id="#btn" variant="outlined" className={classes.button} type="button"
                             onClick={ (event) => this.handleClick(event, this.state.question.option4)}
                             disabled={!this.state.canAnswer || this.state.userOut}>
