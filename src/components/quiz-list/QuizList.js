@@ -11,6 +11,8 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
+import moment from 'moment';
+
 
 const styles = theme => ({
   card: {
@@ -26,9 +28,22 @@ const styles = theme => ({
 });
 
 class QuizList extends React.Component {
-    componentDidMount() {
-        console.log('This needs to be removed');
+    constructor(props){
+      super(props);
+      this.state = {
+        button: false
+      }
     }
+    
+    componentDidMount() {
+        console.log(this.props.remainingTime);
+        if(this.props.remainingTime < 900000){
+          this.setState({
+            button: true
+          })
+        }
+    }
+
     render() {
       const { classes } = this.props;
       console.log(this.props.classes);
@@ -43,12 +58,13 @@ class QuizList extends React.Component {
                         {this.props.quizName}
                       </Typography>
                       <Typography component="p">
-                        Starts at: {this.props.startTime}
+                        Starts {moment(this.props.startTime).fromNow()}
                       </Typography>
                     </CardContent>
                   </CardActionArea>
                   <CardActions style={{ float: 'right' }}>
-                    <Button variant="contained" color="primary" className={classes.button} onClick={this.props.enterQuiz}>
+                    <Button variant="contained" color="primary" className={classes.button} onClick={this.props.enterQuiz}
+                        disabled={!this.state.button}>
                       Start Quiz
                     </Button>
                   </CardActions>

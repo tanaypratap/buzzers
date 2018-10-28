@@ -5,7 +5,7 @@ class QuizStartTimer extends React.Component {
     render() {
         return (
             <div>
-                Starts in {this.props.startTime} hours.
+                Starts {this.props.startTime}
             </div>
         )
     }
