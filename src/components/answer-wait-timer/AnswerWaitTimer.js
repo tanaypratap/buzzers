@@ -53,6 +53,7 @@ class AnswerWaitTimer extends React.Component {
                   </Typography>
                 </Paper>
               </Grid>
+              <br />
               <Grid item xs={12}>
                 <Paper className={classes.paper}>
                   <Typography variant="h5" component="h5">

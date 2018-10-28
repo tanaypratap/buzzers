@@ -8,7 +8,8 @@ class QuizStartTimerContainer extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            remainingTime: null
+            remainingTime: null,
+            usersJoined: 0
         }
         this.timerId = 0;
     }
@@ -19,7 +20,8 @@ class QuizStartTimerContainer extends React.Component {
             const remainingTime = moment(val.Start_time).fromNow();
             const remainingTimeInMilliSeconds = val.Start_time - Date.now();
             this.setState({
-                remainingTime
+                remainingTime: remainingTime,
+                usersJoined: val.userCount
             }, () => {
                 this.timerId = setTimeout( () => { this.props.history.replace(`/quiz/${quizId}`) }, remainingTimeInMilliSeconds)
             });
@@ -31,7 +33,7 @@ class QuizStartTimerContainer extends React.Component {
     }
 
     render() {
-        return <QuizStartTimer startTime={this.state.remainingTime} />
+        return <QuizStartTimer startTime={this.state.remainingTime} usersJoined={this.state.usersJoined}/>
     }
 }
 
