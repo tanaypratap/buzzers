@@ -34,30 +34,34 @@ var addQuestionToFirebase = function (file) {
         }
  });
 };
+
 /**
  * Get all the quiz from the quiz index.
  */
-const getAllQuiz = function() {
+export const getAllQuiz = function(callback) {
+    let allQuiz = null;
     var quizRef = firebase.app().database().ref(quizIndex);
     quizRef.on("value", function(snapshot) {
-        console.log(snapshot.val());
+        allQuiz = snapshot.val();
+        callback(allQuiz);
      }, function (error) {
         console.log("Error: " + error.code);
      });
 };
+
 /**
  * 
  * @param {*} quizId the id of the quiz
  * @param {*} questionId question id to be retrieved.
  */
-const getQuizQuestion = function(quizId, questionId) {
+export const getQuizQuestion = function(quizId, questionId, callback) {
     // the index is like quizquestions/{quizId}/{questionId} = question object
     var quizQuestionRef = firebase.app().database().ref(quizQuestionsIndex);
     var quizRef = quizQuestionRef.child(quizId);
     var questionRef = quizRef.child(questionId);
 
     questionRef.once("value", function(snapshot) {
-        console.log(snapshot.val());
+        callback(snapshot.val());
      }, function (error) {
         console.log("Error: " + error.code);
      });
@@ -195,19 +199,19 @@ const config = {
 firebase.initializeApp(config);
 
 
-// testing code
-//1 creating quizes.
-const directoyPath = path.resolve("../test-firebase/quiz_questions");
-fs.readdir(directoyPath,function(err, files) {
-    console.log(directoyPath);
-    files.forEach(function(file) {
-        console.log(file);
-        addQuestionToFirebase(directoyPath + "/" + file);
-    });
-})
+// // testing code
+// //1 creating quizes.
+// const directoyPath = path.resolve("../test-firebase/quiz_questions");
+// fs.readdir(directoyPath,function(err, files) {
+//     console.log(directoyPath);
+//     files.forEach(function(file) {
+//         console.log(file);
+//         addQuestionToFirebase(directoyPath + "/" + file);
+//     });
+// })
 
 //2. getting a quiz question.
-getQuizQuestion('-LPol7rwiaUYa9aYvmsD',1);
+// getQuizQuestion('-LPol7rwiaUYa9aYvmsD',1, (val) => { console.log(val)} );
 //3. starting a 1-1 quiz
 var challengeId = startQuizChallenge('-LPol7rwiaUYa9aYvmsD','jatin','shashank')
 console.log(challengeId);
