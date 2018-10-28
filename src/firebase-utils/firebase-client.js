@@ -17,6 +17,7 @@ const demoTimeInMillis = 120000
  * @param {string} file
  */
 var addQuestionToFirebase = function (file, inputQuizName, inputStartTime) {
+    console.log(file);
     var quizQuestionText = require(file);
     var quizName;
     var startTime;
@@ -166,7 +167,9 @@ export const quizChallengeResponse = function(quizPlayId, questionId, user, resp
  * @param {*} user
  */
  export const addUserToTournamentQuiz = function(quizId, user) {
+    console.log('FB: ', user);
     var refPath = `${tournamentQuizPlayIndex}/${quizId}/${user.uid}`;
+    console.log(refPath);
     var tournamentQuizRef = firebase.app().database().ref().child(refPath);
     var userObject = {"score" : 0, "isAlive": true, "displayName":user.displayName,
      "photoURL" : user.photoURL, "email" : user.email}
@@ -238,6 +241,7 @@ export const getResponsesForQuestion = function(quizId, questionId, callback) {
         })
 }
 
+<<<<<<< HEAD
 const createDemoQuiz = function (user) {
     const refPath = `quiz`;
     firebase.database().ref(refPath).once("value", function (snapshot) {
@@ -271,6 +275,17 @@ const createDemoQuiz = function (user) {
             }
         });
     });
+=======
+export const createDemoQuiz = function(user) {
+    const directoyPath = path.resolve("../../demo-quiz-bank");
+    console.log(directoyPath);
+    // fs.readdir(directoyPath,function(err, files) {
+    //     var filesCount = files.length;
+    //     var fileIndex = Math.floor(Math.random() * filesCount);
+    var startTime = Date.now() + demoTimeInMillis;
+    addQuestionToFirebase(directoyPath + "/DemoQuiz1" , user + " Quiz", startTime);
+    // })
+>>>>>>> a52aafd823056a62a266a372dbd8d0d589979d9e
 }
 /**
  * gets all the winners
@@ -279,6 +294,7 @@ const createDemoQuiz = function (user) {
  */
 export const getWinnersForTournamentQuiz = function(quizId, callback) {
     var refPath = `${tournamentQuizPlayIndex}/${quizId}`
+    console.log(refPath);
         firebase.database().ref(refPath).orderByChild("score").startAt(1).limitToLast(1).once("value", function(snapshot) {
             var keys = Object.keys(snapshot.val());
             var score = snapshot.val()[keys[0]]["score"]
@@ -294,10 +310,10 @@ export const getWinnersForTournamentQuiz = function(quizId, callback) {
  * @param {*} callback 
  */
 export const getFinalUserScore = function(quizId,user, callback) {
-    var refPath = `${tournamentQuizPlayIndex}/${quizId}/${user.uid}/"score"`;
-        firebase.database().ref(refPath).once("value", function(snapshot) {
-            callback(snapshot.val());
-        })
+    var refPath = `${tournamentQuizPlayIndex}/${quizId}/${user.uid}/score`;
+    firebase.database().ref(refPath).once("value", function(snapshot) {
+        callback(snapshot.val());
+    })
 }
 
 // config for firebase

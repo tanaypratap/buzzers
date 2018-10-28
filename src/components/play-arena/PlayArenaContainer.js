@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { getQuizQuestion, userTournamentQuizResponse, checkIfUserAlive } from "./../../firebase-utils/firebase-client";   
+import { getQuizQuestion, userTournamentQuizResponse, checkIfUserAlive, getUsersRemainingInGame, getQuiz } from "./../../firebase-utils/firebase-client";
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { withRouter } from "react-router-dom";
@@ -18,7 +18,19 @@ const styles = theme => ({
     color: 'black',
     backgroundColor: 'white',
     fontSize: '20px',
-    border: '1px solid rgb(255, 255, 255)'
+    border: '1px solid rgb(255, 255, 255)',
+    '&:hover': {
+      backgroundColor: '#8d01ad',
+      borderColor: '#0062cc',
+    },
+    '&:active': {
+      boxShadow: 'none',
+      backgroundColor: '#8d01ad',
+      borderColor: '#005cbf',
+    },
+    '&:focus': {
+      boxShadow: '0 0 0 0.2rem rgba(0,123,255,.5)',
+    },
   },
   paper: {
     padding: theme.spacing.unit,
@@ -38,18 +50,29 @@ class PlayArenaContainer extends Component{
             hasAnswered: false,
             message: "",
             gameOver: false,
-            totalQuestions: 6,
+            totalQuestions: 100,
             userOut: false
         }
         this.timerId = 0;
     }
 
     componentDidMount(){
-        
+        const user = JSON.parse(localStorage.getItem('user'));
         const { quizId } = this.props.match.params
 
         let promise = new Promise( (resolve, reject) => {
-            checkIfUserAlive( quizId, 'shashank', (val) => {
+            this.setState({
+                hasAnswered: false
+            });
+
+            getQuiz( quizId, (val) => {
+                console.log('TQ: ', val);
+                this.setState({
+                    totalQuestions: val.questionCount
+                })
+            })
+
+            checkIfUserAlive( quizId, user, (val) => {
                 console.log('Here');
                 if(!val){
                     this.setState({
@@ -66,8 +89,8 @@ class PlayArenaContainer extends Component{
         promise.then( () => {
             const currentQuestion = parseInt(localStorage.getItem('id')) || 1;
             if(currentQuestion === this.state.totalQuestions){
-                localStorage.clear();
                 this.props.history.push('/scores');
+                return;
             }
             if(currentQuestion === 1){
                 this.getQuestion();
@@ -78,21 +101,31 @@ class PlayArenaContainer extends Component{
                     currentQuestion
                 }, () => {this.getQuestion()})
             }
+
             this.timerId =
                 setTimeout( () => {
                     if(!this.state.hasAnswered){
-                        userTournamentQuizResponse(quizId, this.state.currentQuestion, 'shashank', null)
+                        userTournamentQuizResponse(quizId, this.state.currentQuestion, user.uid, null)
                     }
-                    console.log('Bhej rhe');
-                    const nextQuestion = this.state.currentQuestion+1;
-                    console.log('Next Question: ', nextQuestion);
-                    localStorage.setItem('id', nextQuestion);
-                    this.props.history.push(`/answer-wait-time`);
+
+                    let getRemainingUsersPromise = new Promise( (resolve, reject) => {
+                        getUsersRemainingInGame(quizId, this.state.currentQuestion, this.state.question.correctAnswer, (val) =>{
+                            localStorage.setItem('remUsers', val);
+                            resolve();
+                        })
+                    })
+
+                    getRemainingUsersPromise.then( () => {
+                        console.log('Bhej rhe');
+                        const nextQuestion = this.state.currentQuestion+1;
+                        console.log('Next Question: ', nextQuestion);
+                        localStorage.setItem('id', nextQuestion);
+                        this.props.history.push(`/answer-wait-time`);
+                    })
+
                 }, 10000);
         });
 
-
-        
     }
 
     componentWillUnmount(){
@@ -130,6 +163,7 @@ class PlayArenaContainer extends Component{
 
     handleClick(event, answer){
         event.preventDefault();
+        const user = JSON.parse(localStorage.getItem('user'));
         this.setState({
             hasAnswered: true
         })
@@ -138,7 +172,7 @@ class PlayArenaContainer extends Component{
             message="Correct":
             message="Incorrect";
         const { quizId } = this.props.match.params;
-        userTournamentQuizResponse(quizId, this.state.currentQuestion, 'shashank', answer);
+        userTournamentQuizResponse(quizId, this.state.currentQuestion, user, answer);
         if(message === "Incorrect"){
             this.setState({
                 gameOver: true
@@ -159,7 +193,7 @@ class PlayArenaContainer extends Component{
             <div className="container" style={{ backgroundColor: '#2f0338', minHeight: '100vh' }}>
 
               <div>
-              
+
               <div className="row" style={{ paddingTop: '5vh' }}>
                 {
                   !this.state.canAnswer &&
@@ -171,7 +205,7 @@ class PlayArenaContainer extends Component{
                 }
                 {this.state.question ?
                     <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
-                        <div style={{ minHeight: '100px', display: 'flex', justifyContent: 'center', flexWrap: 'wrap', alignItems: 'center'  }}>
+                        <div style={{ minHeight: '100px', display: 'flex', justifyContent: 'center', flexWrap: 'wrap', alignItems: 'center', padding: '15px'  }}>
                           <Typography gutterBottom variant="h5" component="h1" style={{ color: 'white' }}>
                             {this.state.question.questionText}
                           </Typography>
@@ -212,11 +246,9 @@ class PlayArenaContainer extends Component{
                       </div>
                     </div>
                 }
-                {!this.state.canAnswer &&
-                    <h4>{this.state.message}</h4>
-                }
+
               </div>
-                
+
                 </div>
 
             </div>
