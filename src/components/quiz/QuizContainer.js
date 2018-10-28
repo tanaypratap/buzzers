@@ -22,7 +22,7 @@ class QuizContainer extends React.Component {
             let upcomingQuizes = {};
             if(value){
                 Object.keys(value).map( (id) => {
-                    if(value[id].Start_time > currentTime){                            
+                    if(value[id].Start_time > currentTime){
                        upcomingQuizes[id] = value[id]
                     }
                 })
@@ -30,7 +30,7 @@ class QuizContainer extends React.Component {
                     upcomingQuizes
                 })
             }
-        });       
+        });
     }
 
     handleStartQuiz(event, id){
@@ -44,7 +44,7 @@ class QuizContainer extends React.Component {
         return (
             <div>
                  {quizes && Object.keys(quizes)
-                    .map(id => <QuizLayout key={id} quizName={quizes[id].quiz_name} enterQuiz={(event) => {this.handleStartQuiz(event, id)}} />)} 
+                    .map(id => <QuizLayout key={id} quizName={quizes[id].quiz_name} startTime={quizes[id].Start_time} enterQuiz={(event) => {this.handleStartQuiz(event, id)}} />)}
             </div>
         )
     }

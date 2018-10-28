@@ -16,7 +16,7 @@ import Typography from '@material-ui/core/Typography';
 
 const styles = theme => ({
   card: {
-    maxWidth: 200,
+    minWidth: '95%',
   },
   media: {
     height: 140,
@@ -35,7 +35,7 @@ class QuizLayout extends React.Component {
       console.log(this.props.classes);
         return (
           <div className="container">
-            <div className="row">
+            <div className="row" style={{ paddingTop: '5vh' }}>
               <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
                 <Card className={classes.card}>
                   <CardActionArea>
@@ -44,11 +44,11 @@ class QuizLayout extends React.Component {
                         {this.props.quizName}
                       </Typography>
                       <Typography component="p">
-                        Test your general knowledge
+                        Starts at: {this.props.startTime}
                       </Typography>
                     </CardContent>
                   </CardActionArea>
-                  <CardActions>
+                  <CardActions style={{ float: 'right' }}>
                     <Button variant="contained" color="primary" className={classes.button} onClick={this.props.enterQuiz}>
                       Start Quiz
                     </Button>
