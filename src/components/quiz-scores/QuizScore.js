@@ -4,17 +4,21 @@ import React from 'react'
 class QuizScore extends React.Component {
     render() {
         return (
-            <div>
-                You answered {this.props.numberofQuestionsAnswered} 
+          <div className="container">
+            <div className="row" style={{ paddingTop: '5vh' }}>
+              <div>
+                  You answered {this.props.numberofQuestionsAnswered}
+              </div>
+              <div>
+                  Winners List
+                  {
+                      this.props.winnersList.map(eachWinner =>
+                          <div> { eachWinner } </div>
+                      )
+                  }
+              </div>
             </div>
-            <div>
-                Winners List 
-                {
-                    this.props.winnersList.map(eachWinner => {
-                        <div> eachWinner.name </div>
-                    })
-                }
-            </div>
+          </div>
         )
     }
 }
