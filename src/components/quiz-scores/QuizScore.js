@@ -28,6 +28,7 @@ const styles = theme => ({
 class QuizScore extends React.Component {
     render() {
         const { classes } = this.props;
+        console.log('winners', this.props.winnersList);
         return (
           <div className="container">
             <div className="row" style={{ padding: '20px', paddingTop: '5vh' }}>
@@ -51,7 +52,7 @@ class QuizScore extends React.Component {
                     </Paper>
                   </Grid>
 
-                  <div className={classes.root}>
+                  {/*<div className={classes.root}>
                     {
                       this.props.winnersList.map(eachWinner =>
                       <List key={eachWinner}>
@@ -64,7 +65,7 @@ class QuizScore extends React.Component {
                       </List>
                       )
                     }
-                  </div>
+                  </div>*/}
                 </Paper>
               </Grid>
             </div>
