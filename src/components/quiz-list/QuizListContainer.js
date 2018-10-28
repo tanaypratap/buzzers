@@ -3,12 +3,12 @@
  * @author Shashank Jha
  */
 import React from 'react';
-import QuizLayout from './QuizLayout';
+import QuizList from './QuizList';
 import { getAllQuiz } from '../../firebase-utils/firebase-client';
 import { withRouter } from "react-router-dom";
 
 
-class QuizContainer extends React.Component {
+class QuizListContainer extends React.Component {
     constructor(props){
         super(props);
         this.state = {
@@ -21,8 +21,8 @@ class QuizContainer extends React.Component {
             const currentTime = Date.now();
             let upcomingQuizes = {};
             if(value){
-                Object.keys(value).map( (id) => {
-                    if(value[id].Start_time > currentTime){                            
+                Object.keys(value).map((id) => {
+                    if(value[id].Start_time > currentTime){
                        upcomingQuizes[id] = value[id]
                     }
                 })
@@ -30,7 +30,7 @@ class QuizContainer extends React.Component {
                     upcomingQuizes
                 })
             }
-        });       
+        });
     }
 
     handleStartQuiz(event, id){
@@ -44,10 +44,10 @@ class QuizContainer extends React.Component {
         return (
             <div>
                  {quizes && Object.keys(quizes)
-                    .map(id => <QuizLayout key={id} quizName={quizes[id].quiz_name} enterQuiz={(event) => {this.handleStartQuiz(event, id)}} />)} 
+                    .map(id => <QuizList key={id} quizName={quizes[id].quiz_name} startTime={quizes[id].Start_time} enterQuiz={(event) => {this.handleStartQuiz(event, id)}} />)}
             </div>
         )
     }
 }
 
-export default withRouter(QuizContainer);
+export default withRouter(QuizListContainer);

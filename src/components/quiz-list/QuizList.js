@@ -4,19 +4,17 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-import './Quiz.css'
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 
 const styles = theme => ({
   card: {
-    maxWidth: 200,
+    minWidth: '95%',
   },
   media: {
     height: 140,
@@ -26,7 +24,7 @@ const styles = theme => ({
   }
 });
 
-class QuizLayout extends React.Component {
+class QuizList extends React.Component {
     componentDidMount() {
         console.log('This needs to be removed');
     }
@@ -35,7 +33,7 @@ class QuizLayout extends React.Component {
       console.log(this.props.classes);
         return (
           <div className="container">
-            <div className="row">
+            <div className="row" style={{ paddingTop: '5vh' }}>
               <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
                 <Card className={classes.card}>
                   <CardActionArea>
@@ -44,11 +42,11 @@ class QuizLayout extends React.Component {
                         {this.props.quizName}
                       </Typography>
                       <Typography component="p">
-                        Test your general knowledge
+                        Starts at: {this.props.startTime}
                       </Typography>
                     </CardContent>
                   </CardActionArea>
-                  <CardActions>
+                  <CardActions style={{ float: 'right' }}>
                     <Button variant="contained" color="primary" className={classes.button} onClick={this.props.enterQuiz}>
                       Start Quiz
                     </Button>
@@ -61,9 +59,9 @@ class QuizLayout extends React.Component {
     }
 }
 
-QuizLayout.propTypes = {
+QuizList.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
 
-export default withStyles(styles)(QuizLayout)
+export default withStyles(styles)(QuizList)
