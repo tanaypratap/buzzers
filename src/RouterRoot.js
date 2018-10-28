@@ -54,8 +54,7 @@ function Root(props){
                   <Route exact path="/" component={QuizListContainer} />
                   <Route path="/test-app" component={App} />
                   <Route path="/quiz/:quizId" component={PlayArenaContainer} />
-                  <Route path="/wait-for-quiz-start/:quizId" component={QuizStartTimerContainer} />
-                  <Route path="/answer-wait-time" component={AnswerWaitTimerContainer} />
+                  <Route exact path="/wait-for-quiz-start/:quizId" component={QuizStartTimerContainer} />
                   <Route path="/scores" component={QuizScoreContainer} />
               </Switch>
             </div>
