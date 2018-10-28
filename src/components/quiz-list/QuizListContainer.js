@@ -46,6 +46,10 @@ class QuizListContainer extends React.Component {
 
     handleStartQuiz(event, id){
         event.preventDefault();
+        if(this.state.upcomingQuizesObject[id].Start_time < Date.now()){
+            window.location.reload();
+            return;
+        }
         const user = JSON.parse(localStorage.getItem('user'));
         addUserToTournamentQuiz(id, user);
         this.props.history.push(`/wait-for-quiz-start/${id}`)
