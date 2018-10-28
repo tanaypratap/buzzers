@@ -1,6 +1,4 @@
 var firebase = require('firebase');
-var fs = require( 'fs' );
-const path = require('path');
 
 const quizIndex = "quiz";
 const quizQuestionsIndex = "quizquestions";
@@ -49,7 +47,6 @@ export const getAllQuiz = function(callback) {
             obj[snapshot.key] = snapshot.val();
             //items.push(obj);
         });
-        console.log(obj);
         callback(obj);
      }, function (error) {
         console.log("Error: " + error.code);
