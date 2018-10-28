@@ -17,11 +17,8 @@ class QuizScoreContainer extends React.Component {
     }
     componentDidMount() {
         const quizId = localStorage.getItem('qId');
-        console.log(quizId);
         const user = JSON.parse(localStorage.getItem('user'));
-        console.log(user);
         getFinalUserScore(quizId, user, (val) => {
-            console.log(val);
             this.setState({
                 finalScore: val
             })

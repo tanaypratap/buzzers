@@ -66,16 +66,13 @@ class PlayArenaContainer extends Component{
             });
 
             getQuiz( quizId, (val) => {
-                console.log('TQ: ', val);
                 this.setState({
                     totalQuestions: val.questionCount
                 })
             })
 
             checkIfUserAlive( quizId, user, (val) => {
-                console.log('Here');
                 if(!val){
-                    console.log('Nhi hai zinda');
                     this.setState({
                         userOut: true,
                         canAnswer: false
@@ -128,9 +125,7 @@ class PlayArenaContainer extends Component{
                     })
 
                     getRemainingUsersPromise.then( () => {
-                        console.log('Bhej rhe');
                         const nextQuestion = this.state.currentQuestion+1;
-                        console.log('Next Question: ', nextQuestion);
                         localStorage.setItem('id', nextQuestion);
                         localStorage.setItem('answer', this.state.question.correctAnswer);
                         if(!this.state.hasAnswered && !this.state.userOut){
@@ -165,9 +160,7 @@ class PlayArenaContainer extends Component{
         let firebasePromise = new Promise( (resolve, reject) => {
             const { quizId } = this.props.match.params;
             const questionId = this.state.currentQuestion;
-            console.log(questionId);
             getQuizQuestion(quizId, questionId, (ques) => {
-                console.log(ques);
                 question = ques;
                 resolve();
             });
