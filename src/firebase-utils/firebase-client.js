@@ -60,6 +60,7 @@ var addQuestionToFirebase = function (file, inputQuizName, inputStartTime) {
  export const getAllQuiz = function(callback) {
     let allQuiz = null;
     var currentTime = Date.now();
+    console.log(currentTime);
     var obj = {};
     var quizRef = firebase.app().database().ref(quizIndex).orderByChild('Start_time').startAt(currentTime);
     // var quizRef = firebase.app().database().ref(quizIndex);
@@ -68,6 +69,7 @@ var addQuestionToFirebase = function (file, inputQuizName, inputStartTime) {
             obj[snapshot.key] = snapshot.val();
             //items.push(obj);
         });
+        debugger;
         callback(obj);
      }, function (error) {
         console.log("Error: " + error.code);
@@ -253,7 +255,7 @@ export const createDemoQuiz = function (userDisplayName) {
         var newQuizRef = firebase.app().database().ref('quiz');
         var newQuizObj = {
             "quiz_name": userDisplayName + " Quiz", "quiz_tag": "DemoQuiz", questionCount: existingQuizobj[quizId].questionCount, userCount: 0,
-            startTime: Date.now() + 120000
+            "Start_time": Date.now() + 120000
         }
         newQuizRef.push(newQuizObj).then((snapshot) => {
             // get the quizId.
@@ -283,7 +285,6 @@ export const createDemoQuiz = function (userDisplayName) {
  */
 export const getWinnersForTournamentQuiz = function(quizId, callback) {
     var refPath = `${tournamentQuizPlayIndex}/${quizId}`
-    console.log(refPath);
         firebase.database().ref(refPath).orderByChild("score").startAt(1).limitToLast(1).once("value", function(snapshot) {
             var keys = Object.keys(snapshot.val());
             var score = snapshot.val()[keys[0]]["score"]
@@ -316,35 +317,4 @@ export const config = {
     };
 firebase.initializeApp(config);
 
-/*
-// // testing code
-// //1 creating quizes.
- export const directoyPath = path.resolve("../../quiz-bank");
- console.log(directoyPath);
- fs.readdir(directoyPath,function(err, files) {
-     console.log(files)
-     files.forEach(function(file) {
-         console.log(file);
-         addQuestionToFirebase(directoyPath + "/" + file);
-     });
- })*/
-/*
-//2. getting a quiz question.
-// getQuizQuestion('-LPol7rwiaUYa9aYvmsD',1, (val) => { console.log(val)} );
-//3. starting a 1-1 quiz
-var challengeId = startQuizChallenge('-LPol7rwiaUYa9aYvmsD','jatin','shashank')
-console.log(challengeId);
-//4. response of a 1-1 quiz.
-quizChallengeResponse("-LPpExdwJIEJ_hweg_Gz",1,'jatin','23',false,4);
-
-userTournamentQuizResponse('-LPol7rwiaUYa9aYvmsD',1,'tanay','375')
-//5 registerUser to quiz.
-addUserToTournamentQuiz('-LPol7rwiaUYa9aYvmsD','tanay');
-//6. register answer of user to quiz.
-
-//7. get the options to count map for users
-getResponsesForQuestion('-LPol7rwiaUYa9aYvmsD',1);
-//8. getWinners
-getWinnersForTournamentQuiz('-LPol7rwiaUYa9aYvmsD');
-*/
 
