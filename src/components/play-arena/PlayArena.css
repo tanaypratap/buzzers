@@ -6,6 +6,10 @@
 #btn:disabled,
 #btn[disabled] {
   border: 1px solid #999999;
-  background-color: 'red';
+  background-color: #d78ddc;
   color: #666666;
 }
+
+.buttonSelected {
+    background-color: #d78ddc,
+  }
