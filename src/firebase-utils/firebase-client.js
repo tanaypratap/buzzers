@@ -1,11 +1,14 @@
 var firebase = require('firebase');
 
-const quizIndex = "quiz";
-const quizQuestionsIndex = "quizquestions";
-const challengeQuizPlayIndex = "challengequizplay";
-const challengeQuizPlayResponseIndex = 'challengequizplayresponse'
-const tournamentQuizPlayIndex = "tournamentquizplay";
-const tournamentQuizPlayResponseIndex = 'tournamentquizplayresponse'
+export const quizIndex = "quiz";
+export const quizQuestionsIndex = "quizquestions";
+export const challengeQuizPlayIndex = "challengequizplay";
+export const challengeQuizPlayResponseIndex = 'challengequizplayresponse'
+export const tournamentQuizPlayIndex = "tournamentquizplay";
+export const tournamentQuizPlayResponseIndex = 'tournamentquizplayresponse'
+
+const path = require('path');
+const fs = require('fs');
 
 /**
  * Add a quiz to firebase
@@ -51,7 +54,7 @@ var addQuestionToFirebase = function (file, inputQuizName, inputStartTime) {
 /**
  * Get all the quiz from the quiz index.
  */
-export const getAllQuiz = function(callback) {
+ export const getAllQuiz = function(callback) {
     let allQuiz = null;
     var currentTime = Date.now();
     var obj = {};
@@ -68,7 +71,7 @@ export const getAllQuiz = function(callback) {
      });
 };
 
-export const getQuiz = function(quizId, callback) {
+ export const getQuiz = function(quizId, callback) {
     let quizRef = firebase.app().database().ref(`${quizIndex}/${quizId}`);
     quizRef.on("value", function(snapshot) {
         callback(snapshot.val());
@@ -81,7 +84,7 @@ export const getQuiz = function(quizId, callback) {
  * @param {*} quizId the id of the quiz
  * @param {*} questionId question id to be retrieved.
  */
-export const getQuizQuestion = function(quizId, questionId, callback) {
+ export const getQuizQuestion = function(quizId, questionId, callback) {
     // the index is like quizquestions/{quizId}/{questionId} = question object
     var quizQuestionRef = firebase.app().database().ref(quizQuestionsIndex);
     var quizRef = quizQuestionRef.child(quizId);
@@ -94,7 +97,7 @@ export const getQuizQuestion = function(quizId, questionId, callback) {
      });
 };
 
-export const getUsersRemainingInGame = function(quizId, questionId, response, callback){
+ export const getUsersRemainingInGame = function(quizId, questionId, response, callback){
     const index = `${tournamentQuizPlayResponseIndex}/${quizId}/${questionId}/${response}`;
     var userRef = firebase.app().database().ref(index);
     userRef.on('value', function(snapshot) {
@@ -110,7 +113,7 @@ export const getUsersRemainingInGame = function(quizId, questionId, response, ca
  * @param {*} player1 alias/quiz name of the primary user.
  * @param {*} player2 alias/quiz name of the challenger.
  */
-const startQuizChallenge = function(quizId, player1, player2) {
+export const startQuizChallenge = function(quizId, player1, player2) {
     var user1 = player1;
     var user2 = player2;
     var challengeQuizPlayRef = firebase.app().database().ref(challengeQuizPlayIndex);
@@ -133,7 +136,7 @@ const startQuizChallenge = function(quizId, player1, player2) {
  * @param {*} isCorrect was the user answer correct boolean
  * @param {*} currentScore
  */
-const quizChallengeResponse = function(quizPlayId, questionId, user, response, isCorrect, currentScore) {
+export const quizChallengeResponse = function(quizPlayId, questionId, user, response, isCorrect, currentScore) {
     var challengeQuizPlayRepsonseRef = firebase.app().database().ref(challengeQuizPlayResponseIndex + '/' + quizPlayId + '/' +user + '/'+ questionId);
     /*var questionObj ={}
     questionObj[questionId] = {"userResponse" : response, "isResponseCorrect": isCorrect };
@@ -154,7 +157,7 @@ const quizChallengeResponse = function(quizPlayId, questionId, user, response, i
  * @param {*} quizId
  * @param {*} user
  */
-export const addUserToTournamentQuiz = function(quizId, user) {
+ export const addUserToTournamentQuiz = function(quizId, user) {
     var refPath = `${tournamentQuizPlayIndex}/${quizId}/${user}`;
     var tournamentQuizRef = firebase.app().database().ref().child(refPath);
     var userObject = {"score" : 0, "isAlive": true}
@@ -170,55 +173,67 @@ export const addUserToTournamentQuiz = function(quizId, user) {
  * @param {*} questionId
  * @param {*} userResponse
  */
-export const userTournamentQuizResponse= function(quizId, questionId, user, userResponse) {
+ export const userTournamentQuizResponse= function(quizId, questionId, user, userResponse) {
     // check if user is alive
-    if (!checkIfUserAlive(quizId, user).then(val => { return val }).catch(val => { return val })) {
-        console.log("Error recieved");
-        throw new Error("User is Malicious");
-    }
-    // get the correct answer from db and compare with given answer to update isAlive.
-    var correctAnswerRef = `${quizQuestionsIndex}/${quizId}/${questionId}/correctAnswer`;
-    console.log(correctAnswerRef);
-    firebase.database().ref().child(correctAnswerRef).once("value", function (snapshot) {
-        var correctAnswer = snapshot.val();
-        if (userResponse === correctAnswer) {
-            firebase.database().ref(tournamentQuizPlayIndex).child(quizId).child(user).child("score").set(questionId);
-        } else {
-            var quizUserRef = `${tournamentQuizPlayIndex}/${quizId}/${user}/isAlive`;
-            firebase.app().database().ref(quizUserRef).set(false);
-        }
-    }, function (error) {
-        console.log("Error: " + error.code);
-    });
-    var databaseRef = firebase.database().ref(tournamentQuizPlayResponseIndex).child(quizId).child(questionId).child(userResponse);
-    databaseRef.transaction(function (response) {
-        return (response || 0) + 1
-    });
-}
-
-const checkIfUserAlive = function(quizId, user) {
-    return new Promise((resolve, reject) =>{
-        var refPath = `${tournamentQuizPlayIndex}/${quizId}/${user}/isAlive`
-
-        firebase.database().ref(refPath).once("value", function(snapshot) {
-            if (snapshot.val() === false) {
-                console.log(user + " is Malicious User should be blocked");
-                reject(false);
-            } else {
-                resolve(true);
+    
+    let newPromise = new Promise( (res, rej) => {
+        checkIfUserAlive(quizId, user, (val) => {
+            console.log('Val: ', val);
+            if(!val){
+                rej(val);
             }
-        })
-    });
+            else{
+                res(val);
+            }
+        });  
+        console.log('Before');   
+    })
+ 
+    newPromise.then( (val) => {
+        console.log('After');
+        // get the correct answer from db and compare with given answer to update isAlive.
+        var correctAnswerRef = `${quizQuestionsIndex}/${quizId}/${questionId}/correctAnswer`;
+        console.log(correctAnswerRef);
+        firebase.database().ref().child(correctAnswerRef).once("value", function (snapshot) {
+            var correctAnswer = snapshot.val();
+            if (userResponse === correctAnswer) {
+                firebase.database().ref(tournamentQuizPlayIndex).child(quizId).child(user).child("score").set(questionId);
+            } else {
+                var quizUserRef = `${tournamentQuizPlayIndex}/${quizId}/${user}/isAlive`;
+                firebase.app().database().ref(quizUserRef).set(false);
+            }
+        }, function (error) {
+            console.log("Error: " + error.code);
+        });
+        if(userResponse){
+            var databaseRef = firebase.database().ref(tournamentQuizPlayResponseIndex).child(quizId).child(questionId).child(userResponse);
+            databaseRef.transaction(function (response) {
+                return (response || 0) + 1
+            });
+        }
+    }).catch((val) => { console.log('Error: ', val)});
+
 }
 
-const getResponsesForQuestion = function(quizId, questionId, callback) {
+ export const checkIfUserAlive = function(quizId, user, callback) {
+    var refPath = `${tournamentQuizPlayIndex}/${quizId}/${user}/isAlive`
+
+    firebase.database().ref(refPath).once("value", function(snapshot) {
+        if (snapshot.val() === 'false') {
+            console.log(user + " is Malicious User should be blocked");   
+        }
+        callback(snapshot.val());
+    })
+}
+
+export const getResponsesForQuestion = function(quizId, questionId, callback) {
     var refPath = `${tournamentQuizPlayResponseIndex}/${quizId}/${questionId}`
         firebase.database().ref(refPath).once("value", function(snapshot) {
             callback(snapshot.val());
         })
 }
 
-const createDemoQuiz = function(user) {
+export const createDemoQuiz = function(user) {
     const directoyPath = path.resolve("../../demo-quiz-bank");
     console.log(directoyPath);
     fs.readdir(directoyPath,function(err, files) {
@@ -234,7 +249,7 @@ const createDemoQuiz = function(user) {
  * @param {*} quizId 
  * @param {*} callback 
  */
-const getWinnersForTournamentQuiz = function(quizId, callback) {
+export const getWinnersForTournamentQuiz = function(quizId, callback) {
     var refPath = `${tournamentQuizPlayIndex}/${quizId}`
         firebase.database().ref(refPath).orderByChild("score").startAt(1).limitToLast(1).once("value", function(snapshot) {
             var keys = Object.keys(snapshot.val());
@@ -250,7 +265,7 @@ const getWinnersForTournamentQuiz = function(quizId, callback) {
  * @param {*} user 
  * @param {*} callback 
  */
-const getFinalUserScore = function(quizId,user, callback) {
+export const getFinalUserScore = function(quizId,user, callback) {
     var refPath = `${tournamentQuizPlayIndex}/${quizId}/${user}/"score"`;
         firebase.database().ref(refPath).once("value", function(snapshot) {
             callback(snapshot.val());
@@ -258,7 +273,7 @@ const getFinalUserScore = function(quizId,user, callback) {
 }
 
 // config for firebase
-const config = {
+export const config = {
     apiKey: 'AIzaSyDe8UizhOLkVq0WZgyree2XinGNbBbd1No',
     authDomain: 'sapphireapp-483.firebaseapp.com',
     databaseURL: 'https://sapphireapp-483.firebaseio.com',
@@ -271,7 +286,7 @@ firebase.initializeApp(config);
 /*
 // // testing code
 // //1 creating quizes.
- const directoyPath = path.resolve("../../quiz-bank");
+ export const directoyPath = path.resolve("../../quiz-bank");
  console.log(directoyPath);
  fs.readdir(directoyPath,function(err, files) {
      console.log(files)
@@ -289,14 +304,14 @@ console.log(challengeId);
 //4. response of a 1-1 quiz.
 quizChallengeResponse("-LPpExdwJIEJ_hweg_Gz",1,'jatin','23',false,4);
 
+userTournamentQuizResponse('-LPol7rwiaUYa9aYvmsD',1,'tanay','375')
 //5 registerUser to quiz.
 addUserToTournamentQuiz('-LPol7rwiaUYa9aYvmsD','tanay');
 //6. register answer of user to quiz.
-userTournamentQuizResponse('-LPol7rwiaUYa9aYvmsD',1,'tanay','375')
+
 //7. get the options to count map for users
 getResponsesForQuestion('-LPol7rwiaUYa9aYvmsD',1);
 //8. getWinners
 getWinnersForTournamentQuiz('-LPol7rwiaUYa9aYvmsD');
 */
 
-//getAllQuiz();
