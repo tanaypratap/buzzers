@@ -23,7 +23,8 @@ class PlayArenaContainer extends Component{
             currentQuestion: 1,
             question: null,
             canAnswer: true,
-            message: ""
+            message: "",
+            gameOver: false
         }
     }
 
@@ -65,17 +66,28 @@ class PlayArenaContainer extends Component{
             message="Incorrect";
         const { quizId } = this.props.match.params;
         userTournamentQuizResponse(quizId, this.state.currentQuestion, 'shashank', answer);
-        this.setState({
-            canAnswer: false,
-            message,
-            currentQuestion: currentQuestion+1,
-        }, () => {this.getQuestion()});
+        if(message === "Incorrect"){
+            this.setState({
+                gameOver: true
+            })
+        }
+        else{
+            this.setState({
+                canAnswer: false,
+                message,
+                currentQuestion: currentQuestion+1,
+            }, () => { 
+                this.getQuestion()
+            });
+        }
     }
 
     render(){
         const { classes } = this.props;
         return(
+            
             <div className="container" style={{ backgroundColor: '#2f0338', minHeight: '100vh' }}>
+              { !this.state.gameOver ?
               <div className="row" style={{ paddingTop: '5vh' }}>
                 {
                   !this.state.canAnswer &&
@@ -127,8 +139,13 @@ class PlayArenaContainer extends Component{
                 {!this.state.canAnswer &&
                     <h4>{this.state.message}</h4>
                 }
-              </div>
+              </div>:
+                <div>
+                    <h2>Game Over</h2>
+                </div>
+                }
             </div>
+            
         )
     }
 }
