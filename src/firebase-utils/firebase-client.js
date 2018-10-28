@@ -14,10 +14,11 @@ const tournamentQuizPlayResponseIndex = 'tournamentquizplayresponse'
  * @param {string} file 
  */
 var addQuestionToFirebase = function (file) {
-    // var quizQuestionText = require('../quiz_questions/GKQuiz1');
     var quizQuestionText = require(file);
     var ref = firebase.app().database().ref('quiz');
-    var quizObj = {"quiz_name" : quizQuestionText.quizQuestions.quizName, "Quiz Tag" : quizQuestionText.quizQuestions.quizTags[0]}
+    var quizObj = {"quiz_name" : quizQuestionText.quizQuestions.quizName, "quiz_tag" : quizQuestionText.quizQuestions.quizTags[0],
+    "Start_time" : quizQuestionText.quizQuestions.startTime}
+    
     ref.push(quizObj).then((snapshot) => {
         // get the quizId.
         const quizId = snapshot.key 
@@ -183,7 +184,11 @@ const getResponsesForQuestion = function(quizId, questionId, callback) {
             callback(snapshot.val());
         })
 }
-
+/**
+ * gets all the quiz
+ * @param {*} quizId 
+ * @param {*} callback 
+ */
 const getWinnersForTournamentQuiz = function(quizId, callback) {
     var refPath = `${tournamentQuizPlayIndex}/${quizId}`
         firebase.database().ref(refPath).orderByChild("score").startAt(1).limitToLast(1).once("value", function(snapshot) {
@@ -194,11 +199,15 @@ const getWinnersForTournamentQuiz = function(quizId, callback) {
             })
         })
 }
-
+/**
+ * get the final user score from the db.
+ * @param {} quizId 
+ * @param {*} user 
+ * @param {*} callback 
+ */
 const getFinalUserScore = function(quizId,user, callback) {
     var refPath = `${tournamentQuizPlayIndex}/${quizId}/${user}/"score"`;
         firebase.database().ref(refPath).once("value", function(snapshot) {
-            console.log(snapshot.val());
             callback(snapshot.val());
         })
 }
@@ -217,15 +226,16 @@ firebase.initializeApp(config);
 /*
 // // testing code
 // //1 creating quizes.
-// const directoyPath = path.resolve("../test-firebase/quiz_questions");
-// fs.readdir(directoyPath,function(err, files) {
-//     console.log(directoyPath);
-//     files.forEach(function(file) {
-//         console.log(file);
-//         addQuestionToFirebase(directoyPath + "/" + file);
-//     });
-// })
-
+ const directoyPath = path.resolve("../../quiz-bank");
+ console.log(directoyPath);
+ fs.readdir(directoyPath,function(err, files) {
+     console.log(files)
+     files.forEach(function(file) {
+         console.log(file);
+         addQuestionToFirebase(directoyPath + "/" + file);
+     });
+ })*/
+/*
 //2. getting a quiz question.
 // getQuizQuestion('-LPol7rwiaUYa9aYvmsD',1, (val) => { console.log(val)} );
 //3. starting a 1-1 quiz
@@ -243,3 +253,5 @@ getResponsesForQuestion('-LPol7rwiaUYa9aYvmsD',1);
 //8. getWinners
 getWinnersForTournamentQuiz('-LPol7rwiaUYa9aYvmsD');
 */
+
+//getAllQuiz();
