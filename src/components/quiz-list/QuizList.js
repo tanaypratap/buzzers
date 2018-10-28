@@ -45,7 +45,6 @@ class QuizList extends React.Component {
 
     render() {
       const { classes } = this.props;
-      // console.log(this.props.classes);
         return (
           <div className="container">
             <div className="row" style={{ paddingTop: '5vh' }}>
