@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
+import AnswerWaitTimer from './AnswerWaitTimer'
 
 class AnswerWaitTimerContainer extends Component{
     constructor(props){
@@ -8,7 +9,7 @@ class AnswerWaitTimerContainer extends Component{
     }
 
     componentDidMount(){
-        this.timerId = 
+        this.timerId =
             setTimeout( () => {
                 console.log('Wapas bhej rahe');
                 const id = localStorage.getItem('qId');
@@ -23,7 +24,7 @@ class AnswerWaitTimerContainer extends Component{
     render(){
         return(
             <div>
-                <h2>Hello There</h2>
+                <AnswerWaitTimer waitTime={5}/>
             </div>
         )
     }

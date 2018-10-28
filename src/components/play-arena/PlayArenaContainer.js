@@ -140,7 +140,7 @@ class PlayArenaContainer extends Component{
                 }
                 {this.state.question ?
                     <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
-                        <div style={{ minHeight: '100px', display: 'flex', justifyContent: 'center', flexWrap: 'wrap', alignItems: 'center'  }}>
+                        <div style={{ minHeight: '100px', display: 'flex', justifyContent: 'center', flexWrap: 'wrap', alignItems: 'center', padding: '15px'  }}>
                           <Typography gutterBottom variant="h5" component="h1" style={{ color: 'white' }}>
                             {this.state.question.questionText}
                           </Typography>
