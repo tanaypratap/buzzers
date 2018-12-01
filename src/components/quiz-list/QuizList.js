@@ -13,7 +13,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import moment from 'moment';
 
-
+// [TODO] Move this to QuizList.css 
 const styles = theme => ({
   card: {
     minWidth: '95%',
@@ -28,50 +28,50 @@ const styles = theme => ({
 });
 
 class QuizList extends React.Component {
-    constructor(props){
-      super(props);
-      this.state = {
-        button: false
-      }
+  constructor(props) {
+    super(props);
+    this.state = {
+      button: false
     }
+  }
 
-    componentDidMount() {
-        if(this.props.remainingTime < 900000){
-          this.setState({
-            button: true
-          })
-        }
+  componentDidMount() {
+    if (this.props.remainingTime < 900000) {
+      this.setState({
+        button: true
+      })
     }
+  }
 
-    render() {
-      const { classes } = this.props;
-        return (
-          <div className="container">
-            <div className="row" style={{ paddingTop: '5vh' }}>
-              <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
-                <Card className={classes.card}>
-                  <CardActionArea>
-                    <CardContent>
-                      <Typography gutterBottom variant="h5" component="h2">
-                        {this.props.quizName}
-                      </Typography>
-                      <Typography component="p">
-                        Starts {moment(this.props.startTime).fromNow()}
-                      </Typography>
-                    </CardContent>
-                  </CardActionArea>
-                  <CardActions style={{ float: 'right' }}>
-                    <Button variant="contained" color="primary" className={classes.button} onClick={this.props.enterQuiz}
-                        disabled={!this.state.button}>
-                      Start Quiz
+  render() {
+    const { classes } = this.props;
+    return (
+      <div className="container">
+        <div className="row" style={{ paddingTop: '5vh' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap' }}>
+            <Card className={classes.card}>
+              <CardActionArea>
+                <CardContent>
+                  <Typography gutterBottom variant="h5" component="h2">
+                    {this.props.quizName}
+                  </Typography>
+                  <Typography component="p">
+                    Starts {moment(this.props.startTime).fromNow()}
+                  </Typography>
+                </CardContent>
+              </CardActionArea>
+              <CardActions style={{ float: 'right' }}>
+                <Button variant="contained" color="primary" className={classes.button} onClick={this.props.enterQuiz}
+                  disabled={!this.state.button}>
+                  Start Quiz
                     </Button>
-                  </CardActions>
-                </Card>
-              </div>
-            </div>
+              </CardActions>
+            </Card>
           </div>
-        )
-    }
+        </div>
+      </div>
+    )
+  }
 }
 
 QuizList.propTypes = {

@@ -19,58 +19,58 @@ const styles = theme => ({
 });
 
 class AnswerWaitTimer extends React.Component {
-    render() {
-        const { classes } = this.props;
-        return (
-          <div className="container" style={{ backgroundColor: 'rgb(65, 37, 82)', minHeight: '100vh' }}>
-            <div className="row" style={{ padding: '20px', paddingTop: '5vh' }}>
-              <Grid item xs={12}>
-                <Paper className={classes.paper}>
-                  <Typography variant="h5" component="h5">
-                    Next question up in
+  render() {
+    const { classes } = this.props;
+    return (
+      <div className="container" style={{ backgroundColor: 'rgb(65, 37, 82)', minHeight: '100vh' }}>
+        <div className="row" style={{ padding: '20px', paddingTop: '5vh' }}>
+          <Grid item xs={12}>
+            <Paper className={classes.paper}>
+              <Typography variant="h5" component="h5">
+                Next question up in
                     <br />
-                    <Typography variant="h4" component="h3">
-                      {this.props.waitTime}s
+                <Typography variant="h4" component="h3">
+                  {this.props.waitTime}s
                     </Typography>
-                  </Typography>
-                </Paper>
-              </Grid>
-              <br />
-              <Grid item xs={12}>
-                <Paper className={classes.paper}>
-                  <Typography variant="h5" component="h5">
-                    Correct answer was
+              </Typography>
+            </Paper>
+          </Grid>
+          <br />
+          <Grid item xs={12}>
+            <Paper className={classes.paper}>
+              <Typography variant="h5" component="h5">
+                Correct answer was
                     <br />
-                    {this.props.correctAnswer}
-                  </Typography>
-                </Paper>
-              </Grid>
-              <br />
-              <Grid item xs={12}>
-                <Paper className={classes.paper}>
-                  <Typography variant="h5" component="h5">
-                    {this.props.status}
-                  </Typography>
-                </Paper>
-              </Grid>
-              <br />
-              <Grid item xs={12}>
-                <Paper className={classes.paper}>
-                  <Typography variant="h5" component="h5">
-                    Number of users going ahead in quiz
+                {this.props.correctAnswer}
+              </Typography>
+            </Paper>
+          </Grid>
+          <br />
+          <Grid item xs={12}>
+            <Paper className={classes.paper}>
+              <Typography variant="h5" component="h5">
+                {this.props.status}
+              </Typography>
+            </Paper>
+          </Grid>
+          <br />
+          <Grid item xs={12}>
+            <Paper className={classes.paper}>
+              <Typography variant="h5" component="h5">
+                Number of users going ahead in quiz
                     <br />
-                    <Typography variant="h4" component="h3" style={{ color: '#2196f3' }}>
-                      {this.props.remainingUsers}
-                    </Typography>
-                  </Typography>
-                </Paper>
-              </Grid>
+                <Typography variant="h4" component="h3" style={{ color: '#2196f3' }}>
+                  {this.props.remainingUsers}
+                </Typography>
+              </Typography>
+            </Paper>
+          </Grid>
 
-            </div>
-          </div>
+        </div>
+      </div>
 
-        )
-      }
+    )
+  }
 }
 
 AnswerWaitTimer.propTypes = {

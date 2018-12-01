@@ -12,19 +12,19 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 
-
+// [TODO] Move this to DemoQuiz.css 
 const styles = theme => ({
-    card: {
-        minWidth: '95%',
-        maxWidth: '95%'
-    },
-    media: {
-        height: 140,
-    },
-    button: {
-        margin: theme.spacing.unit,
-        backgroundColor: 'rgb(59, 20, 82)',
-    }
+  card: {
+    minWidth: '95%',
+    maxWidth: '95%'
+  },
+  media: {
+    height: 140,
+  },
+  button: {
+    margin: theme.spacing.unit,
+    backgroundColor: 'rgb(59, 20, 82)',
+  }
 });
 
 const DemoQuiz = ({ classes, startDemoQuiz }) => (
@@ -62,7 +62,7 @@ const DemoQuiz = ({ classes, startDemoQuiz }) => (
 );
 
 DemoQuiz.propTypes = {
-    classes: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired,
 };
 
 
