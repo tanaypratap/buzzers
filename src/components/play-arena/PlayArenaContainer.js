@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { getQuizQuestion, userTournamentQuizResponse, checkIfUserAlive, getUsersRemainingInGame, getQuiz } from "./../../firebase-utils/firebase-client";
+import * as firebase from "./../../firebase-utils/firebase-client";
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { withRouter } from "react-router-dom";
@@ -40,122 +40,100 @@ const styles = theme => ({
 });
 
 class PlayArenaContainer extends Component {
+
     constructor(props) {
         super(props);
         this.state = {
-            currentQuestion: 1,
             question: null,
-            canAnswer: true,
             hasAnswered: false,
-            gameOver: false,
-            totalQuestions: 100,
+            canAnswer: true,
             userOut: false,
-            waitTime: 10
+            waitTime: 10,
+            currentQuestionId: 1
         }
-        this.timerId = 0;
+        this.timerId = 0;     
+        this.isUserOut = false;   
     }
 
     componentDidMount() {
-        // Get user from Local Storage
+        const that = this;
+        // Get Data from Local Storage
         const user = JSON.parse(localStorage.getItem('user'));
-        // Get quiz id from URL
-        const { quizId } = this.props.match.params
-
-        // This promise determines whether player is still in the game or not
-        // or was out in the previous question
-        let promise = new Promise((resolve, reject) => {
-            this.setState({
-                hasAnswered: false
-            });
-
-            getQuiz(quizId, (val) => {
-                this.setState({
-                    totalQuestions: val.questionCount
+        const { quizId } = this.props.match.params;
+        const currentQuestionId = parseInt(localStorage.getItem('id')) || 1;
+        
+        // Check if User is alive in the game
+        that.checkIfUserAlive(quizId, user)
+        .then( (val) => {
+            if(!val){
+                that.isUserOut = true;
+            }
+            // Get the Question from Firebase
+            that.getQuestion(quizId, currentQuestionId)
+            .then( (question) => {
+                console.log(that.state);
+                // Setting State to re-render view
+                that.setState({
+                    question: question,
+                    userOut: that.isUserOut,
+                    currentQuestionId: currentQuestionId
                 })
+
+                return question;
             })
-
-            checkIfUserAlive(quizId, user, (val) => {
-                if (!val) {
-                    this.setState({
-                        userOut: true,
-                        canAnswer: false
-                    }, () => { resolve(); })
-                }
-                else {
-                    resolve();
-                }
-            })
-        });
-
-        // After resolving, get the current question or finish the quiz
-        promise.then(() => {
-            // Get current question id from Local Storage
-            const currentQuestion = parseInt(localStorage.getItem('id')) || 1;
-
-            // Decide whether to end quiz or not
-            let gettingQuesPromise = new Promise((resolve, reject) => {
-                if (currentQuestion === this.state.totalQuestions + 1) {
-                    this.props.history.push('/scores');
-                    return;
-                }
-                if (currentQuestion === 1) {
-                    this.getQuestion();
-                    localStorage.setItem('qId', this.props.match.params.quizId);
-                }
-                else {
-                    this.setState({
-                        currentQuestion
-                    }, () => { this.getQuestion() })
-                }
-                resolve();
-            });
-
-            gettingQuesPromise.then(() => {
-                // This acts like a clock counting back from 10 to 1
-                this.runningTimer = setInterval(() => {
-                    this.setState({ waitTime: this.state.waitTime - 1 })
+            .then( (question) => {
+                debugger;
+                console.log(that.state);
+                console.log('From Here ', question)
+                // Clock
+                that.runningTimer = setInterval( () => {
+                    that.setState({ waitTime: that.state.waitTime - 1})
                 }, 1000);
 
-                this.timerId =
-                    setTimeout(() => {
-                        // If user has not answered, call firebase function which will rule him/her out
-                        if (!this.state.hasAnswered) {
-                            userTournamentQuizResponse(quizId, this.state.currentQuestion, user, null)
+                // Setting game play timer for 10 seconds. 
+                that.timerId =  setTimeout( () => {
+                    console.log(that.state);
+                    // This is how we rule out a person if he doesn't answer
+                    if(!that.state.hasAnswered){
+                        firebase.userTournamentQuizResponse(quizId, currentQuestionId, user, null)
+                    }
+                    
+                    // Get Remaining Users in the Game
+                    that.getRemainingUsers(quizId, currentQuestionId, question)
+                    .then( (val) => {
+                        console.log(that.state);
+                        if(val === null) val = 0;
+                        localStorage.setItem('remUsers', val);
+                        const nextId = currentQuestionId+1;
+                        localStorage.setItem('id', nextId);
+                        localStorage.setItem('answer', question.correctAnswer);
+                        console.log(that.state.hasAnswered, ' A');
+                        console.log(that.state.userOut, ' B');
+                        if (!that.state.hasAnswered && !that.state.userOut) {
+                            localStorage.setItem('status', 'No answer received. You are out of the game');
                         }
-
-                        // Get remaining users in the Quiz
-                        let getRemainingUsersPromise = new Promise((resolve, reject) => {
-                            getUsersRemainingInGame(quizId, this.state.currentQuestion, this.state.question.correctAnswer, (val) => {
-                                if (val === null) val = 0;
-                                localStorage.setItem('remUsers', val);
-                                resolve();
-                            })
-                        })
-
-                        // This code sets local storage key-values for answer-wait-time components
-                        getRemainingUsersPromise.then(() => {
-                            const nextQuestion = this.state.currentQuestion + 1;
-                            localStorage.setItem('id', nextQuestion);
-                            localStorage.setItem('answer', this.state.question.correctAnswer);
-                            if (!this.state.hasAnswered && !this.state.userOut) {
-                                localStorage.setItem('status', 'No answer received. You are out of the game');
-                            }
-                            else if (this.state.hasAnswered && this.state.userOut) {
-                                localStorage.setItem('status', 'Incorrect answer. You are out');
-                            }
-                            else if (this.state.hasAnswered && !this.state.userOut) {
-                                localStorage.setItem('status', 'Correct answer. Next question coming up');
-                            }
-                            else {
-                                localStorage.setItem('status', 'You are already out of the game');
-                            }
-                            this.props.history.push(`/answer-wait-time`);
-                        })
-
-                    }, 10000);
-
+                        else if (that.state.hasAnswered && that.state.userOut) {
+                            localStorage.setItem('status', 'Incorrect answer. You are out');
+                        }
+                        else if (that.state.hasAnswered && !that.state.userOut) {
+                            localStorage.setItem('status', 'Correct answer. Next question coming up');
+                        }
+                        else {
+                            localStorage.setItem('status', 'You are already out of the game');
+                        }
+                        that.props.history.push(`/answer-wait-time`);
+                    })
+                }, 10000);
             })
-        });
+        });    
+
+        // Check if the game must end
+        that.getQuiz(quizId)
+        .then( (quiz) => {
+            if(currentQuestionId === quiz.questionCount + 1){
+                that.props.history.push('/scores');
+            }
+        })
     }
 
     componentWillUnmount() {
@@ -163,33 +141,42 @@ class PlayArenaContainer extends Component {
         clearTimeout(this.runningTimer);
     }
 
-    getQuestion() {
+    checkIfUserAlive = (quizId, user ) => {
+        return new Promise( (resolve, reject) => {
+            firebase.checkIfUserAlive(quizId, user, (val) => {
+                resolve(val);
+            })
+        })
+    }
 
-        // Invoke firebase to get question in set State
-        let question;
-        let firebasePromise = new Promise((resolve, reject) => {
-            const { quizId } = this.props.match.params;
-            const questionId = this.state.currentQuestion;
-            getQuizQuestion(quizId, questionId, (ques) => {
-                question = ques;
-                resolve();
-            });
-        });
+    getQuiz = (quizId) => {
+        return new Promise( (resolve, reject) => {
+            firebase.getQuiz(quizId, (val) => {
+                resolve(val);
+            })
+        })
+    }
 
-        let questionPromise = new Promise((resolve, reject) => {
-            firebasePromise.then((val) => {
-                this.setState({
-                    question,
-                    canAnswer: true,
-                }, () => { resolve(); });
-            });
-        });
+    getRemainingUsers = (quizId, currentQuestionId, currentQuestion) => {
+        return new Promise( (resolve, reject) => {
+            firebase.getUsersRemainingInGame(quizId, currentQuestionId, currentQuestion.answer, (val) => {
+                resolve(val);
+            })
+        })
+    }
 
+    getQuestion = (quizId, currentQuestionId) => {
+        return new Promise( (resolve, reject) => {
+            firebase.getQuizQuestion(quizId, currentQuestionId, (val) => {
+                resolve(val);
+            })
+        })
     }
 
     handleClick(event, answer) {
         event.preventDefault();
         // Handles user answers
+        console.log('From HandleClick', this.state.question.correctAnswer);
         const user = JSON.parse(localStorage.getItem('user'));
         if (answer !== this.state.question.correctAnswer) {
             this.setState({
@@ -202,7 +189,8 @@ class PlayArenaContainer extends Component {
             hasAnswered: true
         })
         // Invoke firebase function to submit answer for the user
-        userTournamentQuizResponse(quizId, this.state.currentQuestion, user, answer);
+        console.log(this.state.currentQuestionId);
+        firebase.userTournamentQuizResponse(quizId, this.state.currentQuestionId, user, answer);
     }
 
     render() {

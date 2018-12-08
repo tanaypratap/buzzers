@@ -9,7 +9,6 @@ export const tournamentQuizPlayResponseIndex = 'tournamentquizplayresponse'
 const userIndex = "users";
 
 const demoTimeInMillis = 30000
-
 /**
  * Add a quiz to firebase
  * @param {string} file
@@ -31,14 +30,14 @@ var addQuestionToFirebase = function (file, inputQuizName, inputStartTime) {
         startTime = inputStartTime;
     }
      
-    var ref = firebase.app().database().ref('quiz');
+    var ref = db.ref('quiz');
     var quizObj = {"quiz_name" : quizName, "quiz_tag" : quizQuestionText.quizQuestions.quizTags[0],
     "Start_time" : startTime, "userCount":0,  "questionCount" : quizQuestionText.quizQuestions.questionCount}
     
     ref.push(quizObj).then((snapshot) => {
         // get the quizId.
         const quizId = snapshot.key
-        var quizQuestionRef = firebase.app().database().ref('quizquestions');
+        var quizQuestionRef = db.ref('quizquestions');
         var quizQuestions = quizQuestionText.quizQuestions.questions;
         for (var i=0;i<quizQuestions.length;i++) {
             quizQuestionRef.child(quizId).child(i+1).set(
@@ -60,8 +59,8 @@ var addQuestionToFirebase = function (file, inputQuizName, inputStartTime) {
     var currentTime = Date.now();
     console.log(currentTime);
     var obj = {};
-    var quizRef = firebase.app().database().ref(quizIndex).orderByChild('Start_time').startAt(currentTime);
-    // var quizRef = firebase.app().database().ref(quizIndex);
+    var quizRef = db.ref(quizIndex).orderByChild('Start_time').startAt(currentTime);
+    // var quizRef = db.ref(quizIndex);
     quizRef.on("value", function(snapshots) {
         snapshots.forEach(snapshot => {
             obj[snapshot.key] = snapshot.val();
@@ -74,7 +73,7 @@ var addQuestionToFirebase = function (file, inputQuizName, inputStartTime) {
 };
 
  export const getQuiz = function(quizId, callback) {
-    let quizRef = firebase.app().database().ref(`${quizIndex}/${quizId}`);
+    let quizRef = db.ref(`${quizIndex}/${quizId}`);
     quizRef.on("value", function(snapshot) {
         callback(snapshot.val());
     }, function(error) {
@@ -88,7 +87,7 @@ var addQuestionToFirebase = function (file, inputQuizName, inputStartTime) {
  */
  export const getQuizQuestion = function(quizId, questionId, callback) {
     // the index is like quizquestions/{quizId}/{questionId} = question object
-    var quizQuestionRef = firebase.app().database().ref(quizQuestionsIndex);
+    var quizQuestionRef = db.ref(quizQuestionsIndex);
     var quizRef = quizQuestionRef.child(quizId);
     var questionRef = quizRef.child(questionId);
 
@@ -101,7 +100,7 @@ var addQuestionToFirebase = function (file, inputQuizName, inputStartTime) {
 
  export const getUsersRemainingInGame = function(quizId, questionId, response, callback){
     const index = `${tournamentQuizPlayResponseIndex}/${quizId}/${questionId}/${response}`;
-    var userRef = firebase.app().database().ref(index);
+    var userRef = db.ref(index);
     userRef.on('value', function(snapshot) {
         callback(snapshot.val());
     }, function(error){
@@ -113,7 +112,7 @@ var addQuestionToFirebase = function (file, inputQuizName, inputStartTime) {
  * @param {*} user the user object with uid, 
  */
 export const createUserIfNotExists = function (user) {
-    const userRef = firebase.app().database().ref(userIndex)
+    const userRef = db.ref(userIndex)
     userRef.child(user.uid).transaction(function(response) {
         if(response === undefined || response ===null) {
             return user;
@@ -130,7 +129,7 @@ export const createUserIfNotExists = function (user) {
 export const startQuizChallenge = function(quizId, player1, player2) {
     var user1 = player1;
     var user2 = player2;
-    var challengeQuizPlayRef = firebase.app().database().ref(challengeQuizPlayIndex);
+    var challengeQuizPlayRef = db.ref(challengeQuizPlayIndex);
     var challengeQuizPlayObj = {"quizId" : quizId}
     challengeQuizPlayObj[player1] = {"score":0}
     challengeQuizPlayObj[player2] = {"score":0}
@@ -151,13 +150,13 @@ export const startQuizChallenge = function(quizId, player1, player2) {
  * @param {*} currentScore
  */
 export const quizChallengeResponse = function(quizPlayId, questionId, user, response, isCorrect, currentScore) {
-    var challengeQuizPlayRepsonseRef = firebase.app().database().ref(challengeQuizPlayResponseIndex + '/' + quizPlayId + '/' +user + '/'+ questionId);
+    var challengeQuizPlayRepsonseRef = db.ref(challengeQuizPlayResponseIndex + '/' + quizPlayId + '/' +user + '/'+ questionId);
     var responseObj = {"userResponse" : response, "isResponseCorrect": isCorrect };
 
     //var response = {"userResponse" : response, "isResponseCorrect": isCorrect };
     challengeQuizPlayRepsonseRef.set(responseObj);
     // update the score here for the user.
-    var challengeQuizPlayRef = firebase.app().database().ref(challengeQuizPlayIndex);
+    var challengeQuizPlayRef = db.ref(challengeQuizPlayIndex);
     challengeQuizPlayRef.child(quizPlayId).child(user).child("score").set(currentScore);
 }
 /**
@@ -169,7 +168,7 @@ export const quizChallengeResponse = function(quizPlayId, questionId, user, resp
     console.log('FB: ', user);
     var refPath = `${tournamentQuizPlayIndex}/${quizId}/${user.uid}`;
     console.log(refPath);
-    var tournamentQuizRef = firebase.app().database().ref().child(refPath);
+    var tournamentQuizRef = db.ref().child(refPath);
     var userObject = {"score" : 0, "isAlive": true, "displayName":user.displayName,
      "photoURL" : user.photoURL, "email" : user.email}
     tournamentQuizRef.set(userObject);
@@ -209,7 +208,7 @@ export const quizChallengeResponse = function(quizPlayId, questionId, user, resp
             } else {
                 console.log('else');
                 var quizUserRef = `${tournamentQuizPlayIndex}/${quizId}/${user.uid}/isAlive`;
-                firebase.app().database().ref(quizUserRef).set(false);
+                db.ref(quizUserRef).set(false);
             }
         }, function (error) {
             console.log("Error: " + error.code);
@@ -253,7 +252,7 @@ export const createDemoQuiz = function (userDisplayName) {
         var randomIndex = Math.floor(Math.random() * keys.length);
         var quizId = keys[randomIndex];
         console.log(quizId);
-        var newQuizRef = firebase.app().database().ref('quiz');
+        var newQuizRef = db.ref('quiz');
         var newQuizObj = {
             "quiz_name": userDisplayName + "'s" + " Quiz", "quiz_tag": "DemoQuiz", questionCount: existingQuizobj[quizId].questionCount, userCount: 0,
             "Start_time": Date.now() + demoTimeInMillis
@@ -264,7 +263,7 @@ export const createDemoQuiz = function (userDisplayName) {
             for (let i = 1; i <= existingQuizobj[quizId].questionCount; i++) {
                 firebase.database().ref(`quizquestions/${quizId}/${i}`).once("value", function (oldQuizSnapshot) {
                     const oldQuizQuestion = oldQuizSnapshot.val();
-                    var quizQuestionRef = firebase.app().database().ref('quizquestions');
+                    var quizQuestionRef = db.ref('quizquestions');
                     quizQuestionRef.child(newQuizId).child(i).set(
                         {
                             "questionText": oldQuizQuestion.questionText,
@@ -321,5 +320,5 @@ export const config = {
     messagingSenderId: '930819397911'
     };
 firebase.initializeApp(config);
-
+const db = firebase.app().database();
 
