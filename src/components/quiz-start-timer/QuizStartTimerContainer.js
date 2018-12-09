@@ -1,7 +1,7 @@
 import React from 'react'
 import QuizStartTimer from './QuizStartTimer'
 import moment from 'moment';
-import { getQuiz } from './../../firebase-utils/firebase-client';
+import { getQuiz, quizIndex } from './../../firebase-utils/firebase-client';
 import { withRouter } from "react-router-dom";
 
 class QuizStartTimerContainer extends React.Component {
@@ -17,6 +17,7 @@ class QuizStartTimerContainer extends React.Component {
     componentDidMount() {
         // Takes quiz id from url
         const { quizId } = this.props.match.params;
+        localStorage.setItem('qId', quizId);
         // Gets the quiz from firebase and users who have joined
         getQuiz(quizId, (val) => {
             // Calculates remaining time

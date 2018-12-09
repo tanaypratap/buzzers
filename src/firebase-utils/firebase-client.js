@@ -8,7 +8,7 @@ export const tournamentQuizPlayIndex = "tournamentquizplay";
 export const tournamentQuizPlayResponseIndex = 'tournamentquizplayresponse'
 const userIndex = "users";
 
-const demoTimeInMillis = 30000
+const demoTimeInMillis = 10000
 /**
  * Add a quiz to firebase
  * @param {string} file
@@ -100,8 +100,11 @@ var addQuestionToFirebase = function (file, inputQuizName, inputStartTime) {
 
  export const getUsersRemainingInGame = function(quizId, questionId, response, callback){
     const index = `${tournamentQuizPlayResponseIndex}/${quizId}/${questionId}/${response}`;
+    console.log('Function ', index);
+
     var userRef = db.ref(index);
     userRef.on('value', function(snapshot) {
+        console.log('Here: ', snapshot.val());
         callback(snapshot.val());
     }, function(error){
         console.log('Error: '+error.code);
@@ -232,6 +235,7 @@ export const quizChallengeResponse = function(quizPlayId, questionId, user, resp
         if (snapshot.val() === 'false') {
             console.log(user + " is Malicious User should be blocked");   
         }
+        console.log('From FB: ',snapshot.val());
         callback(snapshot.val());
     })
 }

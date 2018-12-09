@@ -82,9 +82,6 @@ class PlayArenaContainer extends Component {
                 return question;
             })
             .then( (question) => {
-                debugger;
-                console.log(that.state);
-                console.log('From Here ', question)
                 // Clock
                 that.runningTimer = setInterval( () => {
                     that.setState({ waitTime: that.state.waitTime - 1})
@@ -101,7 +98,6 @@ class PlayArenaContainer extends Component {
                     // Get Remaining Users in the Game
                     that.getRemainingUsers(quizId, currentQuestionId, question)
                     .then( (val) => {
-                        console.log(that.state);
                         if(val === null) val = 0;
                         localStorage.setItem('remUsers', val);
                         const nextId = currentQuestionId+1;
@@ -144,6 +140,7 @@ class PlayArenaContainer extends Component {
     checkIfUserAlive = (quizId, user ) => {
         return new Promise( (resolve, reject) => {
             firebase.checkIfUserAlive(quizId, user, (val) => {
+                console.log('Aa gya ', val);
                 resolve(val);
             })
         })
@@ -159,7 +156,7 @@ class PlayArenaContainer extends Component {
 
     getRemainingUsers = (quizId, currentQuestionId, currentQuestion) => {
         return new Promise( (resolve, reject) => {
-            firebase.getUsersRemainingInGame(quizId, currentQuestionId, currentQuestion.answer, (val) => {
+            firebase.getUsersRemainingInGame(quizId, currentQuestionId, currentQuestion.correctAnswer, (val) => {
                 resolve(val);
             })
         })
