@@ -57,7 +57,8 @@ class PlayArenaContainer extends Component {
 
     componentDidMount() {
         const that = this;
-        // Get Data from Local Storage
+        // [TODO] Set up context, get rid of Local storage
+        // https://github.com/tanaypratap/buzzers/issues/52
         const user = JSON.parse(localStorage.getItem('user'));
         const { quizId } = this.props.match.params;
         const currentQuestionId = parseInt(localStorage.getItem('id')) || 1;

@@ -1,4 +1,6 @@
-var firebase = require('firebase');
+// [TODO] Add Documentation
+// https://github.com/tanaypratap/buzzers/issues/54
+let firebase = require('firebase');
 
 export const quizIndex = "quiz";
 export const quizQuestionsIndex = "quizquestions";
@@ -13,11 +15,10 @@ const demoTimeInMillis = 10000
  * Add a quiz to firebase
  * @param {string} file
  */
-var addQuestionToFirebase = function (file, inputQuizName, inputStartTime) {
-    console.log(file);
-    var quizQuestionText = require(file);
-    var quizName;
-    var startTime;
+let addQuestionToFirebase = function (file, inputQuizName, inputStartTime) {
+    const quizQuestionText = require(file);
+    let quizName;
+    let startTime;
     if (inputQuizName === undefined) {
         quizName = quizQuestionText.quizQuestions.quizName;
     } else {
@@ -30,16 +31,16 @@ var addQuestionToFirebase = function (file, inputQuizName, inputStartTime) {
         startTime = inputStartTime;
     }
      
-    var ref = db.ref('quiz');
-    var quizObj = {"quiz_name" : quizName, "quiz_tag" : quizQuestionText.quizQuestions.quizTags[0],
+    const ref = db.ref('quiz');
+    const quizObj = {"quiz_name" : quizName, "quiz_tag" : quizQuestionText.quizQuestions.quizTags[0],
     "Start_time" : startTime, "userCount":0,  "questionCount" : quizQuestionText.quizQuestions.questionCount}
     
     ref.push(quizObj).then((snapshot) => {
         // get the quizId.
         const quizId = snapshot.key
-        var quizQuestionRef = db.ref('quizquestions');
-        var quizQuestions = quizQuestionText.quizQuestions.questions;
-        for (var i=0;i<quizQuestions.length;i++) {
+        let quizQuestionRef = db.ref('quizquestions');
+        let quizQuestions = quizQuestionText.quizQuestions.questions;
+        for (let i=0;i<quizQuestions.length;i++) {
             quizQuestionRef.child(quizId).child(i+1).set(
                 {"questionText":quizQuestions[i].question,
                 "option1":quizQuestions[i].options.option1,
@@ -55,25 +56,24 @@ var addQuestionToFirebase = function (file, inputQuizName, inputStartTime) {
  * Get all the quiz from the quiz index.
  */
  export const getAllQuiz = function(callback) {
-    let allQuiz = null;
-    var currentTime = Date.now();
-    console.log(currentTime);
-    var obj = {};
-    var quizRef = db.ref(quizIndex).orderByChild('Start_time').startAt(currentTime);
-    // var quizRef = db.ref(quizIndex);
+    const currentTime = Date.now();
+    let obj = {};
+    const quizRef = db.ref(quizIndex).orderByChild('Start_time').startAt(currentTime);
+    // let quizRef = db.ref(quizIndex);
     quizRef.on("value", function(snapshots) {
         snapshots.forEach(snapshot => {
             obj[snapshot.key] = snapshot.val();
-            //items.push(obj);
         });
         callback(obj);
      }, function (error) {
+        // [TODO] Add Telemetry and Error Handling
+        // https://github.com/tanaypratap/buzzers/issues/53
         console.log("Error: " + error.code);
      });
 };
 
  export const getQuiz = function(quizId, callback) {
-    let quizRef = db.ref(`${quizIndex}/${quizId}`);
+    const quizRef = db.ref(`${quizIndex}/${quizId}`);
     quizRef.on("value", function(snapshot) {
         callback(snapshot.val());
     }, function(error) {
@@ -87,9 +87,9 @@ var addQuestionToFirebase = function (file, inputQuizName, inputStartTime) {
  */
  export const getQuizQuestion = function(quizId, questionId, callback) {
     // the index is like quizquestions/{quizId}/{questionId} = question object
-    var quizQuestionRef = db.ref(quizQuestionsIndex);
-    var quizRef = quizQuestionRef.child(quizId);
-    var questionRef = quizRef.child(questionId);
+    const quizQuestionRef = db.ref(quizQuestionsIndex);
+    const quizRef = quizQuestionRef.child(quizId);
+    const questionRef = quizRef.child(questionId);
 
     questionRef.once("value", function(snapshot) {
         callback(snapshot.val());
@@ -100,11 +100,9 @@ var addQuestionToFirebase = function (file, inputQuizName, inputStartTime) {
 
  export const getUsersRemainingInGame = function(quizId, questionId, response, callback){
     const index = `${tournamentQuizPlayResponseIndex}/${quizId}/${questionId}/${response}`;
-    console.log('Function ', index);
 
-    var userRef = db.ref(index);
+    const userRef = db.ref(index);
     userRef.on('value', function(snapshot) {
-        console.log('Here: ', snapshot.val());
         callback(snapshot.val());
     }, function(error){
         console.log('Error: '+error.code);
@@ -130,18 +128,15 @@ export const createUserIfNotExists = function (user) {
  * @param {*} player2 alias/quiz name of the challenger.
  */
 export const startQuizChallenge = function(quizId, player1, player2) {
-    var user1 = player1;
-    var user2 = player2;
-    var challengeQuizPlayRef = db.ref(challengeQuizPlayIndex);
-    var challengeQuizPlayObj = {"quizId" : quizId}
+    const challengeQuizPlayRef = db.ref(challengeQuizPlayIndex);
+    const challengeQuizPlayObj = {"quizId" : quizId}
     challengeQuizPlayObj[player1] = {"score":0}
     challengeQuizPlayObj[player2] = {"score":0}
-    var quizPlayId;
+    let quizPlayId;
     challengeQuizPlayRef.push(challengeQuizPlayObj).then((snapshot) => {
         quizPlayId = snapshot.key;
         return quizPlayId;
     });
-
 }
 /**
  * Index for 1-1 challenge response of each user.
@@ -153,13 +148,11 @@ export const startQuizChallenge = function(quizId, player1, player2) {
  * @param {*} currentScore
  */
 export const quizChallengeResponse = function(quizPlayId, questionId, user, response, isCorrect, currentScore) {
-    var challengeQuizPlayRepsonseRef = db.ref(challengeQuizPlayResponseIndex + '/' + quizPlayId + '/' +user + '/'+ questionId);
-    var responseObj = {"userResponse" : response, "isResponseCorrect": isCorrect };
+    const challengeQuizPlayRepsonseRef = db.ref(challengeQuizPlayResponseIndex + '/' + quizPlayId + '/' +user + '/'+ questionId);
+    const responseObj = {"userResponse" : response, "isResponseCorrect": isCorrect };
 
-    //var response = {"userResponse" : response, "isResponseCorrect": isCorrect };
     challengeQuizPlayRepsonseRef.set(responseObj);
-    // update the score here for the user.
-    var challengeQuizPlayRef = db.ref(challengeQuizPlayIndex);
+    let challengeQuizPlayRef = db.ref(challengeQuizPlayIndex);
     challengeQuizPlayRef.child(quizPlayId).child(user).child("score").set(currentScore);
 }
 /**
@@ -168,14 +161,12 @@ export const quizChallengeResponse = function(quizPlayId, questionId, user, resp
  * @param {*} user
  */
  export const addUserToTournamentQuiz = function(quizId, user) {
-    console.log('FB: ', user);
-    var refPath = `${tournamentQuizPlayIndex}/${quizId}/${user.uid}`;
-    console.log(refPath);
-    var tournamentQuizRef = db.ref().child(refPath);
-    var userObject = {"score" : 0, "isAlive": true, "displayName":user.displayName,
+    let refPath = `${tournamentQuizPlayIndex}/${quizId}/${user.uid}`;
+    let tournamentQuizRef = db.ref().child(refPath);
+    let userObject = {"score" : 0, "isAlive": true, "displayName":user.displayName,
      "photoURL" : user.photoURL, "email" : user.email}
     tournamentQuizRef.set(userObject);
-    var quizRef = firebase.database().ref(quizIndex).child(quizId).child("userCount");
+    let quizRef = firebase.database().ref(quizIndex).child(quizId).child("userCount");
     quizRef.transaction(function (response) {
         return (response || 0) + 1
     });
@@ -202,22 +193,20 @@ export const quizChallengeResponse = function(quizPlayId, questionId, user, resp
  
     newPromise.then( (val) => {
         // get the correct answer from db and compare with given answer to update isAlive.
-        var correctAnswerRef = `${quizQuestionsIndex}/${quizId}/${questionId}/correctAnswer`;
+        const correctAnswerRef = `${quizQuestionsIndex}/${quizId}/${questionId}/correctAnswer`;
         firebase.database().ref().child(correctAnswerRef).once("value", function (snapshot) {
-            var correctAnswer = snapshot.val();
+            const correctAnswer = snapshot.val();
             if (userResponse && userResponse === correctAnswer) {
-                console.log('if');
                 firebase.database().ref(tournamentQuizPlayIndex).child(quizId).child(user.uid).child("score").set(questionId);
             } else {
-                console.log('else');
-                var quizUserRef = `${tournamentQuizPlayIndex}/${quizId}/${user.uid}/isAlive`;
+                const quizUserRef = `${tournamentQuizPlayIndex}/${quizId}/${user.uid}/isAlive`;
                 db.ref(quizUserRef).set(false);
             }
         }, function (error) {
             console.log("Error: " + error.code);
         });
         if(userResponse){
-            var databaseRef = firebase.database().ref(tournamentQuizPlayResponseIndex).child(quizId).child(questionId).child(userResponse);
+            let databaseRef = firebase.database().ref(tournamentQuizPlayResponseIndex).child(quizId).child(questionId).child(userResponse);
             databaseRef.transaction(function (response) {
                 return (response || 0) + 1
             });
@@ -229,35 +218,33 @@ export const quizChallengeResponse = function(quizPlayId, questionId, user, resp
 
 
  export const checkIfUserAlive = function(quizId, user, callback) {
-    var refPath = `${tournamentQuizPlayIndex}/${quizId}/${user.uid}/isAlive`
+    const refPath = `${tournamentQuizPlayIndex}/${quizId}/${user.uid}/isAlive`
 
     firebase.database().ref(refPath).once("value", function(snapshot) {
         if (snapshot.val() === 'false') {
             console.log(user + " is Malicious User should be blocked");   
         }
-        console.log('From FB: ',snapshot.val());
         callback(snapshot.val());
     })
 }
 
 export const getResponsesForQuestion = function(quizId, questionId, callback) {
-    var refPath = `${tournamentQuizPlayResponseIndex}/${quizId}/${questionId}`
+    let refPath = `${tournamentQuizPlayResponseIndex}/${quizId}/${questionId}`
         firebase.database().ref(refPath).once("value", function(snapshot) {
             callback(snapshot.val());
         })
 }
 
+// [TODO] More cleaning to be done keeping the logic intact 
 export const createDemoQuiz = function (userDisplayName) {
     const refPath = `quiz`;
-    console.log(userDisplayName);
     firebase.database().ref(refPath).once("value", function (snapshot) {
         const existingQuizobj = snapshot.val();
-        var keys = Object.keys(existingQuizobj);
-        var randomIndex = Math.floor(Math.random() * keys.length);
-        var quizId = keys[randomIndex];
-        console.log(quizId);
-        var newQuizRef = db.ref('quiz');
-        var newQuizObj = {
+        let keys = Object.keys(existingQuizobj);
+        let randomIndex = Math.floor(Math.random() * keys.length);
+        let quizId = keys[randomIndex];
+        let newQuizRef = db.ref('quiz');
+        let newQuizObj = {
             "quiz_name": userDisplayName + "'s" + " Quiz", "quiz_tag": "DemoQuiz", questionCount: existingQuizobj[quizId].questionCount, userCount: 0,
             "Start_time": Date.now() + demoTimeInMillis
         }
@@ -267,7 +254,7 @@ export const createDemoQuiz = function (userDisplayName) {
             for (let i = 1; i <= existingQuizobj[quizId].questionCount; i++) {
                 firebase.database().ref(`quizquestions/${quizId}/${i}`).once("value", function (oldQuizSnapshot) {
                     const oldQuizQuestion = oldQuizSnapshot.val();
-                    var quizQuestionRef = db.ref('quizquestions');
+                    let quizQuestionRef = db.ref('quizquestions');
                     quizQuestionRef.child(newQuizId).child(i).set(
                         {
                             "questionText": oldQuizQuestion.questionText,
@@ -288,11 +275,11 @@ export const createDemoQuiz = function (userDisplayName) {
  * @param {*} callback 
  */
 export const getWinnersForTournamentQuiz = function (quizId, callback) {
-    var refPath = `${tournamentQuizPlayIndex}/${quizId}`
+    let refPath = `${tournamentQuizPlayIndex}/${quizId}`
     firebase.database().ref(refPath).orderByChild("score").startAt(1).limitToLast(1).once("value", function (snapshot) {
         if (snapshot.val()) {
-            var keys = Object.keys(snapshot.val());
-            var score = snapshot.val()[keys[0]]["score"]
+            let keys = Object.keys(snapshot.val());
+            let score = snapshot.val()[keys[0]]["score"]
             firebase.database().ref(refPath).orderByChild("score").equalTo(score).on("value", function (snapshot) {
                 callback(snapshot.val());
             })
@@ -308,7 +295,7 @@ export const getWinnersForTournamentQuiz = function (quizId, callback) {
  * @param {*} callback 
  */
 export const getFinalUserScore = function(quizId,user, callback) {
-    var refPath = `${tournamentQuizPlayIndex}/${quizId}/${user.uid}/score`;
+    let refPath = `${tournamentQuizPlayIndex}/${quizId}/${user.uid}/score`;
     firebase.database().ref(refPath).once("value", function(snapshot) {
         callback(snapshot.val());
     })
@@ -325,4 +312,3 @@ export const config = {
     };
 firebase.initializeApp(config);
 const db = firebase.app().database();
-
