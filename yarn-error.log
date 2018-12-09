@@ -1,0 +1,66 @@
+Arguments: 
+  /usr/local/Cellar/node/10.7.0/bin/node /usr/local/bin/yarn remove redux react-redux redux-thunk
+
+PATH: 
+  /usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/share/dotnet:~/.dotnet/tools:/Library/Frameworks/Mono.framework/Versions/Current/Commands:/Applications/Xamarin Workbooks.app/Contents/SharedSupport/path-bin
+
+Yarn version: 
+  1.5.1
+
+Node version: 
+  8.11.2
+
+Platform: 
+  darwin x64
+
+npm manifest: 
+  {
+    "name": "the-buzzers",
+    "version": "0.1.0",
+    "private": true,
+    "dependencies": {
+      "@material-ui/core": "^3.3.1",
+      "@material-ui/icons": "^3.0.1",
+      "firebase": "^5.5.6",
+      "firebaseui": "^3.4.1",
+      "lodash": "^4.17.11",
+      "moment": "^2.22.2",
+      "react": "^16.6.0",
+      "react-dom": "^16.6.0",
+      "react-redux": "^5.1.0",
+      "react-router-dom": "^4.3.1",
+      "react-scripts": "2.0.5",
+      "redux": "^4.0.1",
+      "redux-thunk": "^2.3.0"
+    },
+    "scripts": {
+      "start": "react-scripts start",
+      "build": "react-scripts build",
+      "test": "react-scripts test",
+      "eject": "react-scripts eject"
+    },
+    "eslintConfig": {
+      "extends": "react-app"
+    },
+    "browserslist": [
+      ">0.2%",
+      "not dead",
+      "not ie <= 11",
+      "not op_mini all"
+    ],
+    "devDependencies": {
+      "firebase": "^5.5.6"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
+
+Trace: 
+  Error: No lockfile in this directory. Run `yarn install` to generate one.
+      at new MessageError (/usr/local/lib/node_modules/yarn/lib/cli.js:186:110)
+      at /usr/local/lib/node_modules/yarn/lib/cli.js:89389:13
+      at <anonymous>
