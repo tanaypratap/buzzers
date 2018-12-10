@@ -6,7 +6,6 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import QuizListContainer from './components/quiz-list/QuizListContainer';
-import App from './components/testapp';
 import PlayArenaContainer from './components/play-arena/PlayArenaContainer';
 import QuizStartTimerContainer from './components/quiz-start-timer/QuizStartTimerContainer';
 import QuizScoreContainer from './components/quiz-scores/QuizScoreContainer';
@@ -39,7 +38,6 @@ class ProtectedRoutes extends React.Component {
     return <Router>
         <Switch>
           <Route exact path="/" component={QuizListContainer} />
-          <Route path="/test-app" component={App} />
           <Route path="/quiz/:quizId" component={PlayArenaContainer} />
           <Route exact path="/wait-for-quiz-start/:quizId" component={QuizStartTimerContainer} />
           <Route path="/scores" component={QuizScoreContainer} />
