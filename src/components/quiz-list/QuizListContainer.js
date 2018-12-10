@@ -9,6 +9,22 @@ import { withRouter } from "react-router-dom";
 import _ from 'lodash';
 import DemoQuiz from './components/DemoQuiz';
 
+export const QuizContext = React.createContext();
+
+export class QuizContextProvider extends React.Component{
+    render(){
+        return(
+            <QuizContext.Provider value={{
+                setQuiz: (quizId) => {
+                    this.setState({ quizId })
+                }
+            }}>
+                {this.props.children}
+            </QuizContext.Provider>
+        )
+    }
+}
+
 class QuizListContainer extends React.Component {
     constructor(props) {
         super(props);
@@ -82,7 +98,8 @@ class QuizListContainer extends React.Component {
     render() {
         const quizes = this.state.upcomingQuizes;
         return (
-            <div>
+            <QuizContextProvider>
+                <div>
                 {
                     /* Component with a button to start a demo quiz */
                     this.state.showHostYourOwnQuiz &&
@@ -90,17 +107,23 @@ class QuizListContainer extends React.Component {
                         startDemoQuiz={this.handleClick}
                     />
                 }
-
-                {
-                    /* Components for upcoming quiz with a button to enter */
-                    quizes && quizes
-                        .map(quiz => <QuizList key={quiz.id}
-                            quizName={quiz.quiz_name}
-                            startTime={quiz.Start_time}
-                            enterQuiz={(event) => { this.handleStartQuiz(event, quiz.id) }}
-                            remainingTime={quiz.Start_time - Date.now()} />)
-                }
-            </div>
+                    <QuizContext.Consumer>
+                    { (context) => (
+                        <div>
+                        {
+                        /* Components for upcoming quiz with a button to enter */
+                        quizes && quizes
+                            .map(quiz => <QuizList key={quiz.id}
+                                quizName={quiz.quiz_name}
+                                startTime={quiz.Start_time}
+                                enterQuiz={(event) => { this.handleStartQuiz(event, quiz.id); context.setQuiz(quiz.id)}}
+                                remainingTime={quiz.Start_time - Date.now()} />)
+                        }
+                        </div>
+                    )}
+                    </QuizContext.Consumer>
+                </div>                    
+            </QuizContextProvider>
         )
     }
 }
