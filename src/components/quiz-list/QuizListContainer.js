@@ -8,6 +8,7 @@ import { getAllQuiz, addUserToTournamentQuiz, createDemoQuiz } from '../../fireb
 import { withRouter } from "react-router-dom";
 import _ from 'lodash';
 import DemoQuiz from './components/DemoQuiz';
+import { QuizContext } from './../../RouterRoot';
 
 class QuizListContainer extends React.Component {
     constructor(props) {
@@ -82,7 +83,7 @@ class QuizListContainer extends React.Component {
     render() {
         const quizes = this.state.upcomingQuizes;
         return (
-            <div>
+                <div>
                 {
                     /* Component with a button to start a demo quiz */
                     this.state.showHostYourOwnQuiz &&
@@ -90,17 +91,23 @@ class QuizListContainer extends React.Component {
                         startDemoQuiz={this.handleClick}
                     />
                 }
-
-                {
-                    /* Components for upcoming quiz with a button to enter */
-                    quizes && quizes
-                        .map(quiz => <QuizList key={quiz.id}
-                            quizName={quiz.quiz_name}
-                            startTime={quiz.Start_time}
-                            enterQuiz={(event) => { this.handleStartQuiz(event, quiz.id) }}
-                            remainingTime={quiz.Start_time - Date.now()} />)
-                }
-            </div>
+                    <QuizContext.Consumer>
+                    { (context) => (
+                        <div>
+                        {
+                        /* Components for upcoming quiz with a button to enter */
+                        quizes && quizes
+                            .map(quiz => <QuizList key={quiz.id}
+                                quizName={quiz.quiz_name}
+                                startTime={quiz.Start_time}
+                                enterQuiz={(event) => { this.handleStartQuiz(event, quiz.id); context.setQuiz(quiz.id)}}
+                                remainingTime={quiz.Start_time - Date.now()} />)
+                        }
+                        </div>
+                    )}
+                    </QuizContext.Consumer>
+                    
+                </div>                    
         )
     }
 }

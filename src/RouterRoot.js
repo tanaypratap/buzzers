@@ -21,7 +21,22 @@ import Navbar from "./components/navbar/Navbar";
 import { firebaseAuth } from './firebase';
 import AnswerWaitTimerContainer from './components/answer-wait-timer/AnswerWaitTimerContainer';
 
+export const QuizContext = React.createContext();
 
+export class QuizContextProvider extends React.Component{
+    render(){
+        return(
+            <QuizContext.Provider value={{
+                state: this.state,
+                setQuiz: (quizId) => {
+                    this.setState({ quizId })
+                }
+            }}>
+                {this.props.children}
+            </QuizContext.Provider>
+        )
+    }
+}
 
 class ProtectedRoutes extends React.Component {
   componentDidMount() {
@@ -54,6 +69,7 @@ ProtectedRoutes = withRouter(ProtectedRoutes)
 function Root(){
     return(
         <Router>
+            <QuizContextProvider>
             <div>
             <Navbar />
               <Switch>
@@ -62,6 +78,7 @@ function Root(){
                   <ProtectedRoutes />
               </Switch>
             </div>
+            </QuizContextProvider>
         </Router>
     )
 }
