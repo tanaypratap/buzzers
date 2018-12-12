@@ -8,22 +8,7 @@ import { getAllQuiz, addUserToTournamentQuiz, createDemoQuiz } from '../../fireb
 import { withRouter } from "react-router-dom";
 import _ from 'lodash';
 import DemoQuiz from './components/DemoQuiz';
-
-export const QuizContext = React.createContext();
-
-export class QuizContextProvider extends React.Component{
-    render(){
-        return(
-            <QuizContext.Provider value={{
-                setQuiz: (quizId) => {
-                    this.setState({ quizId })
-                }
-            }}>
-                {this.props.children}
-            </QuizContext.Provider>
-        )
-    }
-}
+import { QuizContext } from './../../RouterRoot';
 
 class QuizListContainer extends React.Component {
     constructor(props) {
@@ -98,7 +83,6 @@ class QuizListContainer extends React.Component {
     render() {
         const quizes = this.state.upcomingQuizes;
         return (
-            <QuizContextProvider>
                 <div>
                 {
                     /* Component with a button to start a demo quiz */
@@ -122,8 +106,8 @@ class QuizListContainer extends React.Component {
                         </div>
                     )}
                     </QuizContext.Consumer>
+                    
                 </div>                    
-            </QuizContextProvider>
         )
     }
 }
